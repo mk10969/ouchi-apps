@@ -4,12 +4,12 @@
 $ brew install kustomize  
 - prepare
 $ cd ../argocd/overlays/prd  
-$ kustomize build > ../../../99-init/init-install.yaml  
+$ kustomize build > ../../../99-init/01-install.yaml  
 
 
 1. argocd本体のデブロイ(on raspi)
 ```
-$ kubectl apply -f init-install.yaml
+$ kubectl apply -f 01-install.yaml
 ```
 
 2. LoadBalancerへサービスを変更(on raspi)
@@ -30,17 +30,16 @@ $ argocd login 192.168.3.201
 *username: admin
 *password: argocd-serverのpod名
 
-5. argocd appを作成(on mac)
-cdするappを設定することで、自動でdeployさせる。
-
+5. argocd appを作成(on raspi)
 ```
-$ argocd app create argocd-config \
-  --repo https://github.com/mk10969/ouchi-k8s-cd \
-  --path argocd-config/overlays/prd \
-  --dest-namespace argocd \
-  --dest-server https://kubernetes.default.svc \
-  --sync-policy automated \
-  --auto-prune 
+kubectl apply -f 02-argocd-app.yaml
 ```
 
-6. argocd repo add git@github.com:mk10969/ouchi-k8s-cd.git --ssh-private-key-path ~/.ssh/id_rsa.pub
+*下記のコマンドから、appを作成できなかった。。。
+<!-- ```
+$ argocd app create argocd-app --repo https://github.com/mk10969/ouchi-k8s-cd --path argocd-app/overlays/prd --dest-server https://kubernetes.default.svc --dest-namespace argocd --sync-policy automated --auto-prune
+``` -->
+
+6. argocd repository secret
+
+<!-- argocd repo add git@github.com:mk10969/ouchi-k8s-cd.git --ssh-private-key-path ~/.ssh/id_rsa.pub -->

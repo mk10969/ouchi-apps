@@ -4,4 +4,5 @@ resources:
   - ../../base
 patchesStrategicMerge:
   - argocd.yaml
+  - argocd-app.yaml
   - argocd-notification.yaml
