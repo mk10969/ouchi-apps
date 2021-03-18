@@ -36,9 +36,3 @@ $ argocd app create argocd-config \
   --sync-policy automated \
   --auto-prune 
 ```
-
-1. asdaf
-
-
-2. 
-
