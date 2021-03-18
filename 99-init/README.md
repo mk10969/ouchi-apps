@@ -42,3 +42,5 @@ $ argocd app create argocd-config \
   --sync-policy automated \
   --auto-prune 
 ```
+
+6. argocd repo add git@github.com:mk10969/ouchi-k8s-cd.git --ssh-private-key-path ~/.ssh/id_rsa.pub

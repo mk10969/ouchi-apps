@@ -1,5 +1,7 @@
 # ouchi-k8s-cd
 
+## Manifest repository 
+
 namespaceを各々のappに入れるか、一括で外だしして管理するか。。
 →環境ごとに、namespaceを設定できるようにする。
 

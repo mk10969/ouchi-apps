@@ -2534,15 +2534,6 @@ subjects:
   namespace: argocd
 ---
 apiVersion: v1
-data:
-  repositories: |
-    - url: https://github.com/mk10969/ouchi-k8s-cd
-      passwordSecret:
-        name: 973706611a27f171bc1c17d3e784999df7708b1a
-        key: password
-      usernameSecret:
-        name: mk10969
-        key: username
 kind: ConfigMap
 metadata:
   labels:
