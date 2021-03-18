@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: argocd
 resources:
   - ../../base
-  - slack-app.yaml
 patchesStrategicMerge:
   - slack-secret.yaml
   - slack-cm.yaml
