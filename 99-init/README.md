@@ -1,5 +1,11 @@
 初回時のフロー
 
+- pre install  
+$ brew install kustomize  
+- prepare
+$ cd ../argocd/overlays/prd  
+$ kustomize build > ../../../99-init/init-install.yaml  
+
 
 1. argocd本体のデブロイ(on raspi)
 ```
