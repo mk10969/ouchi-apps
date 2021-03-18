@@ -41,5 +41,5 @@ $ argocd app create argocd-app --repo https://github.com/mk10969/ouchi-k8s-cd --
 ``` -->
 
 6. argocd repository secret
-
+GUIから、手動でユーザ名とパスワードを設定する。
 <!-- argocd repo add git@github.com:mk10969/ouchi-k8s-cd.git --ssh-private-key-path ~/.ssh/id_rsa.pub -->
