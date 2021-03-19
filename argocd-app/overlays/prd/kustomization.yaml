@@ -6,3 +6,4 @@ patchesStrategicMerge:
   - argocd.yaml
   - argocd-app.yaml
   - argocd-notification.yaml
+  - metallb.yaml
