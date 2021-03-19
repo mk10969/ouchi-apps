@@ -7,4 +7,6 @@ patchesStrategicMerge:
   - argocd-app.yaml
   - argocd-notification.yaml
   - metallb.yaml
-  - tekton.yaml
+  - tekton-pipeline.yaml
+  - tekton-trigger.yaml
+  - tekton-dashboard.yaml
