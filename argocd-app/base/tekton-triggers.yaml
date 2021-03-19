@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tekton
+  name: tekton-triggers
   namespace: argocd
   annotations:
     argocd.argoproj.io/manifest-generate-paths: ..
@@ -15,7 +15,7 @@ spec:
   source:
     repoURL: https://github.com/mk10969/ouchi-k8s-cd
     targetRevision: HEAD
-    path: tekton/base
+    path: tekton-triggers/base
   destination:
     server: https://kubernetes.default.svc
     namespace: tekton-pipelines
