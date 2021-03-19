@@ -5,8 +5,6 @@ resources:
   - upstream/02-metallb.yaml
 images:
   - name: metallb/controller
-    newName: metallb/speaker
     newTag: v0.9.5
   - name: metallb/speaker
-    newName: metallb/controller
     newTag: v0.9.5
