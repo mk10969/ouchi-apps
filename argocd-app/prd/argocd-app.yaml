@@ -5,4 +5,4 @@ metadata:
   namespace: argocd
 spec:
   source:
-    path: argocd-app/overlays/prd
+    path: argocd-app/prd

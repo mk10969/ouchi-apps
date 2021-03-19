@@ -5,3 +5,4 @@ resources:
   - argocd-app.yaml
   - argocd-notification.yaml
   - metallb.yaml
+  - tekton.yaml
