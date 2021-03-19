@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - upstream/01-pipeline.yaml
+  - upstream/02-triggers.yaml
+  - upstream/03-dashboard.yaml
+patchesStrategicMerge:
+  - dynamic-to-static.yaml
