@@ -5,6 +5,7 @@ resources:
   - argocd-app.yaml
   - argocd-notification.yaml
   - metallb.yaml
+  - ingress-controller.yaml
   - tekton-pipeline.yaml
   - tekton-triggers.yaml
   - tekton-dashboard.yaml
