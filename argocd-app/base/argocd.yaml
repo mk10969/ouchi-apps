@@ -5,11 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/manifest-generate-paths: ..
-    notifications.argoproj.io/subscribe.on-deployed.slack: argocd
-    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: argocd
-    notifications.argoproj.io/subscribe.app-sync-failed.slack: argocd
-    notifications.argoproj.io/subscribe.app-sync-status-unknown.slack: argocd
-    notifications.argoproj.io/subscribe.app-health-degraded.slack: argocd
+    notifications.argoproj.io/subscribe.sync-operation-change.slack: argocd
 spec:
   project: default
   source:

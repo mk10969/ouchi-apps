@@ -4,5 +4,6 @@ namespace: argocd
 resources:
   - ../base
 patchesStrategicMerge:
+  - argocd-notifications-cm.yaml
   - slack-secret.yaml
   - slack-cm.yaml
