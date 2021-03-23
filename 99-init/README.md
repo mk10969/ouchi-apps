@@ -11,35 +11,59 @@ $ kustomize build > ../../../99-init/01-install.yaml
 ```
 $ kubectl apply -f 01-install.yaml
 ```
-
-2. LoadBalancerへサービスを変更(on raspi)
+2. metallbのデブロイ(on raspi)
+```
+$ kubectl apply -f 02-metallb.yaml
+```
+3. patch
 ```
 $ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 ```
-*metallbを事前にデプロイしておくとIPアドレスが割り振られる。
-
-3. argocd cliet のインストール(on mac)
+4. argocd appのデブロイ(on raspi)
 ```
-$ brew install argocd
+$ kubectl apply -f 03-argocd-app.yaml
 ```
 
-4. argocd clietで、argocd-serverへログイン(on mac)
-```
-$ argocd login 192.168.3.201
-```
-*username: admin
-*password: argocd-serverのpod名
 
-5. argocd appを作成(on raspi)
-```
-kubectl apply -f 02-argocd-app.yaml
-```
 
-*下記のコマンドから、appを作成できなかった。。。
-<!-- ```
-$ argocd app create argocd-app --repo https://github.com/mk10969/ouchi-k8s-cd --path argocd-app/overlays/prd --dest-server https://kubernetes.default.svc --dest-namespace argocd --sync-policy automated --auto-prune
+
+
+### ほんとは、下記の手順で、他のアプリに依存したくないけど、、w
+<!-- 2. pod内へ入って、argocd login(on raspi)
+```
+$ kubectl exec -n argocd -it argocd-server-xxxxx-yyy /bin/bash
+$ argocd@argocd-server-xxxxx-yyy:~$ argocd --insecure login localhost:8080
+username: admin
+password: argocd-server-xxxxx-yyy
+$ argocd@argocd-server-xxxxx-yyy:~$ argocd repocreds add https://github.com/mk10969/ouchi-k8s-cd/ --username mk10969 --password <github access token>
 ``` -->
 
-6. argocd repository secret
-GUIから、手動でユーザ名とパスワードを設定する。
-<!-- argocd repo add git@github.com:mk10969/ouchi-k8s-cd.git --ssh-private-key-path ~/.ssh/id_rsa.pub -->
+2. pod内へ入って、argocd login(on raspi)
+```
+$ kubectl exec -n argocd -it argocd-server-xxxxx-yyy /bin/bash
+$ argocd@argocd-server-xxxxx-yyy:~$ argocd --insecure login localhost:8080
+username: admin
+password: argocd-server-xxxxx-yyy
+$ argocd@argocd-server-xxxxx-yyy:~$ argocd repo add https://github.com/mk10969/ouchi-k8s-cd/ --username mk10969 --password <github access token>
+```
+
+3. argocd appをデプロイ(on raspi)
+```
+$ argocd@argocd-server-xxxxx-yyy:~$ argocd app create argocd-app \
+    --repo https://github.com/mk10969/ouchi-k8s-cd \
+    --path argocd-app/prd \
+    --dest-server https://kubernetes.default.svc \
+    --dest-namespace argocd \
+    --sync-policy automated \
+    --auto-prune \
+    <!-- --revision master -->
+```
+
+### test
+- port-forward experimental
+argocd repo add https://github.com/mk10969/ouchi-k8s-cd/ --username mk10969 --password 8007fe2398e8f82e05f2c71183cef0676fd94f25
+
+kubectl port-forward argocd-server-7d7fff6674-j66fw 8080:80 -n argocd
+ssh -N -L 8080:100.64.1.101:8080 ubuntu@100.64.1.101
+ 
+ 
