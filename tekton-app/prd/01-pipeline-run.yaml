@@ -1,10 +1,10 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: build-and-push-1
+  name: 01-build-and-push
 spec:
   pipelineRef:
-    name: build-and-push-pipeline
+    name: build-and-push
   params:
     - name: gitUrl
       value: https://github.com/takara9/tekton-pipeline-1
