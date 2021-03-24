@@ -4,7 +4,7 @@ metadata:
   name: 01-build-and-push
 spec:
   pipelineRef:
-    name: build-and-push
+    name: build-and-push-pipeline
   params:
     - name: gitUrl
       value: https://github.com/takara9/tekton-pipeline-1
