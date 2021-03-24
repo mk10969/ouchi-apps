@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: build-and-push-1
+spec:
+  pipelineRef:
+    name: build-and-push-pipeline
+  params:
+    - name: gitUrl
+      value: https://github.com/takara9/tekton-pipeline-1
+    - name: imageUrl
+      value: mk10969/test-kaniko
+    - name: imageTag
+      value: "latest"
+  serviceAccountName: pipeline-account
+  workspaces:
+    - name: git-source
+      emptyDir: {}

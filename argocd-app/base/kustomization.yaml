@@ -9,3 +9,4 @@ resources:
   - tekton-pipeline.yaml
   - tekton-triggers.yaml
   - tekton-dashboard.yaml
+  - tekton-app.yaml
