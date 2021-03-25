@@ -5,3 +5,4 @@ resources:
   - pipeline-build-and-push.yaml
   - task-git-clone.yaml
   - task-kaniko.yaml
+  - secret.yaml

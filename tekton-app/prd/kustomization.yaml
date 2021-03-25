@@ -4,4 +4,3 @@ namespace: tekton-pipelines
 resources:
   - ../base
   - 01-pipeline-run.yaml
-  - secret.yaml
