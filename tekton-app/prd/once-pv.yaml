@@ -5,12 +5,12 @@ metadata:
 spec:
   storageClassName: nfs-git-source-storage
   capacity:
-    storage: 10Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   claimRef:
     name: git-source-pvc
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    server: raspi01
+    server: raspi4-01
     path: /data/nfsshare/git-source
