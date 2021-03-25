@@ -7,7 +7,7 @@ spec:
     name: build-and-push-pipeline
   params:
     - name: gitUrl
-      value: https://github.com/takara9/tekton-pipeline-1
+      value: https://github.com/takara9/web-nginx
     - name: imageUrl
       value: mk10969/test-kaniko
     - name: imageTag
