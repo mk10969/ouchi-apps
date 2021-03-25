@@ -45,8 +45,7 @@ spec:
       env:
         - name: DOCKER_CONFIG
           value: /tekton/home/.docker
-      command:
-        - /kaniko/executor
+      args:
         - $(params.EXTRA_ARGS)
         - --dockerfile=$(params.DOCKERFILE)
         - --context=$(workspaces.source.path)/$(params.CONTEXT) # The user does not need to care the workspace and the source.
