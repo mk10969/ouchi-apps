@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - upstream/common.yaml
+  - upstream/crds.yaml
+  - upstream/operator.yaml
+
+  # - upstream/cluster-test.yaml
+  # - upstream/cluster.yaml
+# images:
+#   - name: ceph/ceph
+#     newTag: :v15.2.9
