@@ -5,8 +5,12 @@ resources:
   - upstream/crds.yaml
   - upstream/operator.yaml
 
-  # - upstream/cluster-test.yaml
+  - upstream/cluster-test.yaml
   # - upstream/cluster.yaml
-# images:
-#   - name: ceph/ceph
-#     newTag: :v15.2.9
+
+  # - upstream/ceph-block-pool-test.yaml
+  # - upstream/ceph-block-pool.yaml
+
+images:
+  - name: ceph/ceph
+    newTag: :v15.2.9

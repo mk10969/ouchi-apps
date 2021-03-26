@@ -8,3 +8,6 @@ curl -sfL https://raw.githubusercontent.com/rook/rook/$ROOK_VERSION/cluster/exam
 
 curl -sfL https://raw.githubusercontent.com/rook/rook/$ROOK_VERSION/cluster/examples/kubernetes/ceph/cluster-test.yaml -o ./base/upstream/cluster-test.yaml
 curl -sfL https://raw.githubusercontent.com/rook/rook/$ROOK_VERSION/cluster/examples/kubernetes/ceph/cluster.yaml -o ./base/upstream/cluster.yaml
+
+curl -sfL https://raw.githubusercontent.com/rook/rook/$ROOK_VERSION/cluster/examples/kubernetes/ceph/csi/rbd/storageclass.yaml -o ./base/upstream/ceph-block-pool.yaml
+curl -sfL https://raw.githubusercontent.com/rook/rook/$ROOK_VERSION/cluster/examples/kubernetes/ceph/csi/rbd/storageclass-test.yaml -o ./base/upstream/ceph-block-pool-test.yaml
