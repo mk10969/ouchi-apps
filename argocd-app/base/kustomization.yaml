@@ -11,3 +11,4 @@ resources:
   - tekton-dashboard.yaml
   - tekton-app.yaml
   - rook-ceph.yaml
+  - rook-tool.yaml
