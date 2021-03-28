@@ -12,3 +12,4 @@ resources:
   - tekton-app.yaml
   - rook-ceph.yaml
   - rook-tool.yaml
+  - cert-manager.yaml

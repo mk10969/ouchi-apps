@@ -8,7 +8,7 @@ resources:
   - upstream/cluster-test.yaml
   # - upstream/cluster.yaml
 
-  # - upstream/ceph-block-pool-test.yaml
+  - upstream/ceph-block-pool-test.yaml
   # - upstream/ceph-block-pool.yaml
 
 images:
