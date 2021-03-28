@@ -12,6 +12,6 @@ patchesStrategicMerge:
   - tekton-triggers.yaml
   - tekton-dashboard.yaml
   - tekton-app.yaml
-  - rook-ceph.yaml
+  # - rook-ceph.yaml
   - rook-tool.yaml
   - cert-manager.yaml
