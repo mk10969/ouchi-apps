@@ -15,4 +15,5 @@ spec:
   serviceAccountName: pipeline-account
   workspaces:
     - name: git-source
-      emptyDir: {}
+      persistentVolumeClaim:
+        claimName: tekton-volume
