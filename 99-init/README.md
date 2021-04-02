@@ -3,8 +3,8 @@
 - pre install  
 $ brew install kustomize  
 - prepare
-$ cd ../argocd/overlays/prd  
-$ kustomize build > ../../../99-init/01-install.yaml  
+$ cd ../argocd/prd  
+$ kustomize build > ../../99-init/01-install.yaml  
 
 
 1. argocd本体のデブロイ(on raspi)
