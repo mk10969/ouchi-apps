@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-curl -sfL https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml -o ./base/upstream/install.yaml
+ARGOCD_VERSION="v2.0.0-rc2"
+
+curl -sfL https://raw.githubusercontent.com/argoproj/argo-cd/$ARGOCD_VERSION/manifests/install.yaml -o ./base/upstream/install.yaml
