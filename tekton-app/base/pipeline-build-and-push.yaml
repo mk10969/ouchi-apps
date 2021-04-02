@@ -12,6 +12,9 @@ spec:
     - name: gitRevision
       description: Git revision to check out
       default: master
+    - name: pathToContext
+      description: The path to the build context, used by Kaniko - within the workspace
+      default: "."
     - name: imageUrl
       description: Image name including repository
     - name: imageTag
@@ -42,5 +45,7 @@ spec:
         - name: source
           workspace: git-source
       params:
+        - name: CONTEXT
+          value: $(params.pathToContext)
         - name: IMAGE
           value: $(params.imageUrl):$(params.imageTag)

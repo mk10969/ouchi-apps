@@ -3,6 +3,8 @@ kind: PipelineRun
 metadata:
   name: 01-build-and-push
 spec:
+  # パイプライン実行用のサービスアカウント、RBACで権限付与済み
+  serviceAccountName: pipeline-account
   pipelineRef:
     name: build-and-push-pipeline
   params:
@@ -12,7 +14,8 @@ spec:
       value: mk10969/test-kaniko
     - name: imageTag
       value: "latest"
-  serviceAccountName: pipeline-account
+    - name: pathToContext
+      value: .
   workspaces:
     - name: git-source
       persistentVolumeClaim:
