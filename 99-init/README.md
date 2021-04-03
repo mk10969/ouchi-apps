@@ -42,8 +42,10 @@ $ argocd@argocd-server-xxxxx-yyy:~$ argocd repocreds add https://github.com/mk10
 ```
 $ kubectl exec -n argocd -it argocd-server-xxxxx-yyy /bin/bash
 $ argocd@argocd-server-xxxxx-yyy:~$ argocd --insecure login localhost:8080
+
 username: admin
 password: argocd-server-xxxxx-yyy
+
 $ argocd@argocd-server-xxxxx-yyy:~$ argocd repo add https://github.com/mk10969/ouchi-k8s-cd/ --username mk10969 --password <github access token>
 ```
 
