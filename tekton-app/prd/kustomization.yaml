@@ -3,6 +3,6 @@ kind: Kustomization
 namespace: tekton-pipelines
 resources:
   - ../base
-  - 00-task-run.yaml
+  # - 00-task-run.yaml
   - 01-pipeline-run.yaml
   - 01-pvc.yaml

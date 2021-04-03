@@ -3,8 +3,6 @@ kind: PipelineRun
 metadata:
   name: 01-build-and-push
 spec:
-  # パイプライン実行用のサービスアカウント、RBACで権限付与済み
-  serviceAccountName: pipeline-account
   pipelineRef:
     name: build-and-push-pipeline
   params:
@@ -16,6 +14,7 @@ spec:
       value: "latest"
     - name: pathToContext
       value: .
+  serviceAccountName: pipeline-account
   workspaces:
     - name: git-source
       persistentVolumeClaim:

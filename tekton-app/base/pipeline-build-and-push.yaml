@@ -14,7 +14,7 @@ spec:
       default: master
     - name: pathToContext
       description: The path to the build context, used by Kaniko - within the workspace
-      default: "."
+      default: .
     - name: imageUrl
       description: Image name including repository
     - name: imageTag
