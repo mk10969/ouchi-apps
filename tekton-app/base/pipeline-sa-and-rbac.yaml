@@ -6,7 +6,8 @@ kind: ServiceAccount
 metadata:
   name: pipeline-account
 secrets:
-  - name: basic-user-pass
+  - name: basic-user-pass-git
+  - name: basic-user-pass-docker
 
 ---
 apiVersion: v1
