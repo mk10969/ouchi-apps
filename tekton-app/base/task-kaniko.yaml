@@ -68,6 +68,6 @@ spec:
         runAsUser: 0
     - name: digest-to-results
       workingDir: $(workspaces.source.path)
-      image: imega/jq:1.6
+      image: apteno/alpine-jq:latest
       script: |
         cat $(params.CONTEXT)/image-digested | jq '.[0].value' -rj | tee /tekton/results/IMAGE-DIGEST
