@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - upstream/cluster_role_aggregate_grafana_admin_edit.yaml
+  - upstream/cluster_role_aggregate_grafana_view.yaml
+  - upstream/cluster_role_binding_grafana_operator.yaml
+  - upstream/cluster_role_grafana_operator.yaml
+  - upstream/Grafana.yaml
+  - upstream/GrafanaDashboard.yaml
+  - upstream/GrafanaDataSource.yaml
+  - upstream/operator.yaml
+  - upstream/role.yaml
+  - upstream/role_binding.yaml
+  - upstream/service_account.yaml
