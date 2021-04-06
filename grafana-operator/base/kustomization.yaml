@@ -12,3 +12,5 @@ resources:
   - upstream/role.yaml
   - upstream/role_binding.yaml
   - upstream/service_account.yaml
+patchesStrategicMerge:
+  - cluster-role-binding.yaml

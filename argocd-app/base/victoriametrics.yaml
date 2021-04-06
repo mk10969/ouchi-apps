@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: victoriametrics
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: ..
+    notifications.argoproj.io/subscribe.sync-operation-change.slack: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mk10969/ouchi-k8s-cd
+    targetRevision: HEAD
+    path: victoriametrics/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
