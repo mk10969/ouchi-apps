@@ -19,3 +19,15 @@ spec:
     - name: git-source
       persistentVolumeClaim:
         claimName: tekton-volume
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tekton-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: rook-ceph-block
