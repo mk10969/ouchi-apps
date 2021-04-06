@@ -16,3 +16,7 @@ patchesStrategicMerge:
   # - rook-ceph.yaml
   # - rook-tool.yaml
   - cert-manager.yaml
+  ### monitoring ###
+  - grafana-operator.yaml
+  - kube-state-metrics.yaml
+  - victoriametrics.yaml
