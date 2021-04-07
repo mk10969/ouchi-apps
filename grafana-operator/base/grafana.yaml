@@ -5,14 +5,14 @@ metadata:
 spec:
   service:
     type: LoadBalancer
-  deployment:
-    envFrom:
-      - configMapRef:
-          name: https-proxy
-      - secretRef:
-          name: github-auth-20200423
-    securityContext:
-      runAsUser: 10000
+  # deployment:
+  #   envFrom:
+  #     - configMapRef:
+  #         name: https-proxy
+  #     - secretRef:
+  #         name: github-auth-20200423
+  #   securityContext:
+  #     runAsUser: 10000
   config:
     log:
       mode: "console"
@@ -24,10 +24,10 @@ spec:
     security:
       admin_password: secret
       admin_user: admin
-    analytics:
-      check_for_updates: true
-    grafana_net:
-      url: https://grafana.monitoring-system.svc
+    # analytics:
+    #   check_for_updates: true
+    # grafana_net:
+    #   url: https://grafana.monitoring-system.svc
     # users:
     #   viewers_can_edit: true
     #   auto_assign_org_role: Viewer
