@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - dashboards
   - datasources/victoriametrics.yaml
+  - grafana.yaml
   - upstream/cluster_role_aggregate_grafana_admin_edit.yaml
   - upstream/cluster_role_aggregate_grafana_view.yaml
   - upstream/cluster_role_binding_grafana_operator.yaml
