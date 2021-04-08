@@ -3,6 +3,8 @@ kind: Grafana
 metadata:
   name: grafana
 spec:
+  ingress:
+    enabled: True
   service:
     type: LoadBalancer
   # deployment:
@@ -18,12 +20,13 @@ spec:
       mode: "console"
       level: "warn"
     auth:
-      disable_signout_menu: true
+      disable_login_form: False
+      disable_signout_menu: True
     auth.anonymous:
-      enabled: true
-    security:
-      admin_password: secret
-      admin_user: admin
+      enabled: True
+    # security:
+    #   admin_password: secret
+    #   admin_user: admin
     # analytics:
     #   check_for_updates: true
     # grafana_net:
@@ -37,3 +40,11 @@ spec:
           operator: In
           values:
             - grafana
+  resources:
+    # Optionally specify container resources
+    limits:
+      cpu: 2000m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
