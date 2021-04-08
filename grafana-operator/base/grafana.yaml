@@ -3,8 +3,8 @@ kind: Grafana
 metadata:
   name: grafana
 spec:
-  ingress:
-    enabled: True
+  # ingress:
+  #   enabled: True
   service:
     type: LoadBalancer
   # deployment:
