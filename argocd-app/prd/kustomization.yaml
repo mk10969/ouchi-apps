@@ -7,15 +7,15 @@ patchesStrategicMerge:
   - argocd-app.yaml
   - argocd-notification.yaml
   - metallb.yaml
-  - metrics-server.yaml
+  # - metrics-server.yaml
   # - ingress-controller.yaml ### 一旦利用しない
-  - tekton-pipeline.yaml
-  - tekton-triggers.yaml
-  - tekton-dashboard.yaml
-  - tekton-app.yaml
+  # - tekton-pipeline.yaml
+  # - tekton-triggers.yaml
+  # - tekton-dashboard.yaml
+  # - tekton-app.yaml
   # - rook-ceph.yaml
   # - rook-tool.yaml
-  - cert-manager.yaml
+  # - cert-manager.yaml
   ### monitoring ###
   - grafana-operator.yaml
   - kube-state-metrics.yaml
