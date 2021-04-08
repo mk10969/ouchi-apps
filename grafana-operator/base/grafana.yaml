@@ -3,8 +3,6 @@ kind: Grafana
 metadata:
   name: grafana
 spec:
-  # ingress:
-  #   enabled: True
   service:
     type: LoadBalancer
   # deployment:
@@ -24,9 +22,9 @@ spec:
       disable_signout_menu: True
     auth.anonymous:
       enabled: True
-    # security:
-    #   admin_password: secret
-    #   admin_user: admin
+    security:
+      admin_user: admin
+      admin_password: secret
     # analytics:
     #   check_for_updates: true
     # grafana_net:
