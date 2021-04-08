@@ -17,6 +17,7 @@ resources:
   - upstream/service_account.yaml
 patchesStrategicMerge:
   - cluster-role-binding.yaml
+  - operator.yaml
 patchesJson6902:
   - target:
       group: apps
