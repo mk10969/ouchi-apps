@@ -1,0 +1,26 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlert
+metadata:
+  name: vmalert
+  namespace: monitoring-system
+spec:
+  replicaCount: 3
+  datasource:
+    url: "http://vmselect-vmcluster.monitoring-system.svc:8481/select/0/prometheus"
+  notifiers:
+    - url: "http://vmalertmanager-vmalertmanager-0.vmalertmanager-vmalertmanager.monitoring-system.svc:9093"
+    - url: "http://vmalertmanager-vmalertmanager-1.vmalertmanager-vmalertmanager.monitoring-system.svc:9093"
+    - url: "http://vmalertmanager-vmalertmanager-2.vmalertmanager-vmalertmanager.monitoring-system.svc:9093"
+  evaluationInterval: "30s"
+  ruleSelector:
+    matchExpressions:
+      - key: managed-by
+        operator: NotIn
+        values:
+          - vm-operator
+  resources:
+    requests:
+      cpu: 100m
+      memory: 200Mi
+  podDisruptionBudget:
+    minAvailable: 2

@@ -1,0 +1,72 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: vmcluster
+  namespace: monitoring-system
+spec:
+  retentionPeriod: "30d"
+  vmstorage:
+    replicaCount: 3
+    extraArgs:
+      dedup.minScrapeInterval: 30s # should be equal to VMAgent's scrapeInterval (default 30s)
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: rook-ceph-block
+          resources:
+            requests:
+              storage: 1Gi # this value is for GCP env. we don't use pvc-autoresizer. see overlays/*/victoriametrics/vmcluster-largeset.yaml too.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 500Mi
+    podDisruptionBudget:
+      maxUnavailable: 1
+    containers:
+      - name: vmstorage
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8482
+            scheme: HTTP
+          periodSeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8482
+          failureThreshold: 30
+          periodSeconds: 30
+
+  vmselect:
+    replicaCount: 3
+    extraArgs:
+      replicationFactor: "2"
+      dedup.minScrapeInterval: 30s # should be equal to VMAgent's scrapeInterval (default 30s)
+    resources:
+      requests:
+        cpu: 100m
+        memory: 500Mi
+    podDisruptionBudget:
+      minAvailable: 2
+
+    # the following volumes and volumeMounts should be removed eventually
+    volumes:
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
+
+  vminsert:
+    replicaCount: 3
+    extraArgs:
+      replicationFactor: "2"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 500Mi
+    podDisruptionBudget:
+      minAvailable: 2

@@ -1,0 +1,39 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanager
+metadata:
+  name: vmalertmanager
+  namespace: monitoring-system
+spec:
+  replicaCount: 3
+  # VMAlertmanager is able to detect configSecret content change and to reload alertmanager.
+  # We don't need to use secretGenerator for alertmanager.yaml unlike monitoring/base/alertmanager/deployment.yaml
+  configSecret: vmalertmanager-config
+  volumeMounts:
+    - name: alertmanager-config-volume
+      mountPath: /etc/vm/configs/vmalertmanager
+    - name: vmalertmanager-settype
+      mountPath: /etc/vm/configs/vmalertmanager-settype
+  volumes:
+    # However, it is not able to detect this configMap content change. So use configMapGenerator.
+    # Note that we don't use VMAlertmanager.spec.configMaps because they use name of ConfigMap (which is changed any time) as mount point.
+    - name: alertmanager-config-volume
+      configMap:
+        name: vmalertmanager
+    - name: vmalertmanager-settype
+      configMap:
+        name: vmalertmanager-settype
+  resources:
+    requests:
+      cpu: 100m
+      memory: 200Mi
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: rook-ceph-block
+  podDisruptionBudget:
+    minAvailable: 2
