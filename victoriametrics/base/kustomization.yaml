@@ -6,6 +6,6 @@ resources:
   - upstream/rbac.yaml
   - vmagent.yaml
   - vmalert.yaml
-  - vmalertmanager.yaml
+  # - vmalertmanager.yaml
   - vmcluster.yaml
   - rules/argocd-scrape.yaml
