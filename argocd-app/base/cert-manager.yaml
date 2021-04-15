@@ -9,7 +9,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/mk10969/ouchi-k8s-cd
+    repoURL: https://github.com/mk10969/ouchi-kubernetes
     targetRevision: HEAD
     path: cert-manager/base
   destination:
