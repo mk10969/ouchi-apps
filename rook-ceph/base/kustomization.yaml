@@ -4,12 +4,8 @@ resources:
   - upstream/common.yaml
   - upstream/crds.yaml
   - upstream/operator.yaml
-
-  - upstream/cluster-test.yaml
-  # - upstream/cluster.yaml
-
-  - upstream/ceph-block-pool-test.yaml
-  # - upstream/ceph-block-pool.yaml
+  - upstream/cluster.yaml
+  - upstream/ceph-block-pool.yaml
 
 images:
   - name: ceph/ceph
