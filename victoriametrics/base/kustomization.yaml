@@ -4,8 +4,8 @@ resources:
   - upstream/crd.yaml
   - upstream/manager.yaml
   - upstream/rbac.yaml
-  - vmagent.yaml
-  - vmalert.yaml
+  # - vmagent.yaml
+  # - vmalert.yaml
   # - vmalertmanager.yaml
   - vmcluster.yaml
   - rules/argocd-scrape.yaml
