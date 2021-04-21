@@ -34,7 +34,7 @@ spec:
     #   auto_assign_org_role: Viewer
   dashboardLabelSelector:
     - matchExpressions:
-        - key: app
+        - key: app.kubernetes.io/name
           operator: In
           values:
             - grafana
