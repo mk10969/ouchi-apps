@@ -18,3 +18,7 @@ spec:
       containers:
         - name: vmcluster-test-tool
           image: busybox:stable
+          command:
+            - sleep
+            - "3600"
+          imagePullPolicy: IfNotPresent
