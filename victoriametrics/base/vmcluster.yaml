@@ -61,9 +61,6 @@ spec:
         mountPath: /tmp
 
   vminsert:
-    # external
-    service:
-      type: LoadBalancer
     replicaCount: 3
     extraArgs:
       replicationFactor: "2"
