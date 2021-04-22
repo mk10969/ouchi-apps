@@ -20,5 +20,5 @@ spec:
           image: ubuntu:20.04
           command:
             - sleep
-            - "3600"
+            - "360000"
           imagePullPolicy: IfNotPresent
