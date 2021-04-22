@@ -16,8 +16,26 @@ patchesJson6902:
       name: rook-ceph
     patch: |-
       - op: replace
-        path: /spec/healthCheck
-        value:
+        path: /spec/healthCheck/livenessProbe/mgr
+        value: {probe: {failureThreshold: 10, timeoutSeconds: 5}}
+  - target:
+      group: ceph.rook.io
+      version: v1
+      kind: CephCluster
+      name: rook-ceph
+    patch: |-
+      - op: replace
+        path: /spec/healthCheck/livenessProbe/mon
+        value: {probe: {failureThreshold: 10, timeoutSeconds: 5}}
+  - target:
+      group: ceph.rook.io
+      version: v1
+      kind: CephCluster
+      name: rook-ceph
+    patch: |-
+      - op: replace
+        path: /spec/healthCheck/livenessProbe/osd
+        value: {probe: {failureThreshold: 10, timeoutSeconds: 5}}
   - target:
       group: ceph.rook.io
       version: v1
@@ -31,3 +49,9 @@ patchesJson6902:
 images:
   - name: ceph/ceph
     newTag: :v15.2.9
+
+    #  failureThreshold: 3
+    #     initialDelaySeconds: 45
+    #     periodSeconds: 10
+    #     successThreshold: 1
+    #     timeoutSeconds: 1
