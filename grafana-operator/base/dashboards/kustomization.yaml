@@ -6,3 +6,4 @@ commonLabels:
 resources:
   - simple.yaml
   - argocd.yaml
+  - node-exporter.yaml
