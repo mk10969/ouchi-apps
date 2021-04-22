@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ROOK_VERSION="v1.5.9"
+ROOK_VERSION="v1.6.0"
 
 curl -sfL https://raw.githubusercontent.com/rook/rook/$ROOK_VERSION/cluster/examples/kubernetes/ceph/common.yaml -o ./base/upstream/common.yaml
 curl -sfL https://raw.githubusercontent.com/rook/rook/$ROOK_VERSION/cluster/examples/kubernetes/ceph/crds.yaml -o ./base/upstream/crds.yaml

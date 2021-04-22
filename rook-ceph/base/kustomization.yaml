@@ -7,6 +7,27 @@ resources:
   - upstream/cluster.yaml
   - upstream/ceph-block-pool.yaml
 
+patchesJson6902:
+  # healthCheck error: Liveness probe failed
+  - target:
+      group: ceph.rook.io
+      version: v1
+      kind: CephCluster
+      name: rook-ceph
+    patch: |-
+      - op: replace
+        path: /spec/healthCheck
+        value:
+  - target:
+      group: ceph.rook.io
+      version: v1
+      kind: CephCluster
+      name: rook-ceph
+    patch: |-
+      - op: replace
+        path: /spec/dashboard/ssl
+        value: "false"
+
 images:
   - name: ceph/ceph
     newTag: :v15.2.9
