@@ -9,6 +9,8 @@ resources:
 
 patchesJson6902:
   # healthCheck error: Liveness probe failed
+  # bugだと思われる。指定したプロパティのみオーバライドしない。。はぁ。
+  # 一旦、livenessProbeは、disableにしてみる。
   - target:
       group: ceph.rook.io
       version: v1
@@ -16,8 +18,9 @@ patchesJson6902:
       name: rook-ceph
     patch: |-
       - op: replace
-        path: /spec/healthCheck/livenessProbe/mgr
-        value: {probe: {timeoutSeconds: 5}}
+        path: /spec/healthCheck/livenessProbe/mon/disabled
+        value: true
+
   - target:
       group: ceph.rook.io
       version: v1
@@ -25,8 +28,9 @@ patchesJson6902:
       name: rook-ceph
     patch: |-
       - op: replace
-        path: /spec/healthCheck/livenessProbe/mon
-        value: {probe: {timeoutSeconds: 5}}
+        path: /spec/healthCheck/livenessProbe/mgr/disabled
+        value: true
+
   - target:
       group: ceph.rook.io
       version: v1
@@ -34,8 +38,9 @@ patchesJson6902:
       name: rook-ceph
     patch: |-
       - op: replace
-        path: /spec/healthCheck/livenessProbe/osd
-        value: {probe: {timeoutSeconds: 5}}
+        path: /spec/healthCheck/livenessProbe/osd/disabled
+        value: true
+
   - target:
       group: ceph.rook.io
       version: v1
