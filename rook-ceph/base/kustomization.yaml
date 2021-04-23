@@ -17,7 +17,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/healthCheck/livenessProbe/mgr
-        value: {probe: {failureThreshold: 10, timeoutSeconds: 5}}
+        value: {probe: {timeoutSeconds: 5}}
   - target:
       group: ceph.rook.io
       version: v1
@@ -26,7 +26,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/healthCheck/livenessProbe/mon
-        value: {probe: {failureThreshold: 10, timeoutSeconds: 5}}
+        value: {probe: {timeoutSeconds: 5}}
   - target:
       group: ceph.rook.io
       version: v1
@@ -35,7 +35,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/healthCheck/livenessProbe/osd
-        value: {probe: {failureThreshold: 10, timeoutSeconds: 5}}
+        value: {probe: {timeoutSeconds: 5}}
   - target:
       group: ceph.rook.io
       version: v1
