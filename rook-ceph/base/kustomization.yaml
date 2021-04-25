@@ -4,53 +4,62 @@ resources:
   - upstream/common.yaml
   - upstream/crds.yaml
   - upstream/operator.yaml
-  - upstream/cluster-test.yaml
-  - upstream/ceph-block-pool-test.yaml
-### cluster組むには、リソース不足（raspi4 RAM 4...）
-# patchesJson6902:
-#   # healthCheck error: Liveness probe failed
-#   # bugだと思われる。指定したプロパティのみオーバライドしない。。はぁ。
-#   # 一旦、livenessProbeは、disableにしてみる。
-#   - target:
-#       group: ceph.rook.io
-#       version: v1
-#       kind: CephCluster
-#       name: rook-ceph
-#     patch: |-
-#       - op: replace
-#         path: /spec/healthCheck/livenessProbe/mon/disabled
-#         value: true
+  - upstream/cluster.yaml
+  - upstream/ceph-block-pool.yaml
 
-#   - target:
-#       group: ceph.rook.io
-#       version: v1
-#       kind: CephCluster
-#       name: rook-ceph
-#     patch: |-
-#       - op: replace
-#         path: /spec/healthCheck/livenessProbe/mgr/disabled
-#         value: true
+patchesJson6902:
+  # healthCheck error: Liveness probe failed
+  # bugだと思われる。指定したプロパティのみオーバライドしない。。はぁ。
+  # - target:
+  #     group: ceph.rook.io
+  #     version: v1
+  #     kind: CephCluster
+  #     name: rook-ceph
+  #   patch: |-
+  #     - op: replace
+  #       path: /spec/healthCheck/livenessProbe/mon/disabled
+  #       value: true
 
-#   - target:
-#       group: ceph.rook.io
-#       version: v1
-#       kind: CephCluster
-#       name: rook-ceph
-#     patch: |-
-#       - op: replace
-#         path: /spec/healthCheck/livenessProbe/osd/disabled
-#         value: true
+  # - target:
+  #     group: ceph.rook.io
+  #     version: v1
+  #     kind: CephCluster
+  #     name: rook-ceph
+  #   patch: |-
+  #     - op: replace
+  #       path: /spec/healthCheck/livenessProbe/mgr/disabled
+  #       value: true
 
-#   - target:
-#       group: ceph.rook.io
-#       version: v1
-#       kind: CephCluster
-#       name: rook-ceph
-#     patch: |-
-#       - op: replace
-#         path: /spec/dashboard/ssl
-#         value: false
+  # - target:
+  #     group: ceph.rook.io
+  #     version: v1
+  #     kind: CephCluster
+  #     name: rook-ceph
+  #   patch: |-
+  #     - op: replace
+  #       path: /spec/healthCheck/livenessProbe/osd/disabled
+  #       value: true
 
-# images:
-#   - name: ceph/ceph
-#     newTag: :v15.2.9
+  # - target:
+  #     group: ceph.rook.io
+  #     version: v1
+  #     kind: CephCluster
+  #     name: rook-ceph
+  #   patch: |-
+  #     - op: replace
+  #       path: /spec/dashboard/ssl
+  #       value: false
+
+  - target:
+      group: ceph.rook.io
+      version: v1
+      kind: CephCluster
+      name: rook-ceph
+    patch: |-
+      - op: replace
+        path: /spec/resources
+        value: {mgr: {limits: {cpu: "500m", memory: "512Mi"}, requests: {cpu: "500m", memory: "512Mi"}}, mon: {limits: {cpu: "500m", memory: "2Gi"}, requests: {cpu: "500m", memory: "1Gi"}}}
+
+images:
+  - name: ceph/ceph
+    newTag: :v15.2.9
