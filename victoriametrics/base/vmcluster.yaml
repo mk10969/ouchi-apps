@@ -4,7 +4,7 @@ metadata:
   name: vmcluster
   namespace: monitoring-system
 spec:
-  retentionPeriod: "30d"
+  retentionPeriod: "10d"
   vmstorage:
     replicaCount: 3
     extraArgs:
@@ -15,7 +15,7 @@ spec:
           storageClassName: rook-ceph-block
           resources:
             requests:
-              storage: 5Gi # this value is for GCP env. we don't use pvc-autoresizer. see overlays/*/victoriametrics/vmcluster-largeset.yaml too.
+              storage: 3Gi
     resources:
       requests:
         cpu: 100m
