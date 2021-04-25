@@ -17,6 +17,6 @@ patchesStrategicMerge:
   - rook-tool.yaml
   - cert-manager.yaml
   ### monitoring ###
-  - grafana-operator.yaml
+  # - grafana-operator.yaml
   - kube-state-metrics.yaml
-  - victoriametrics.yaml
+  # - victoriametrics.yaml
