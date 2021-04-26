@@ -13,3 +13,6 @@ spec:
     requests:
       cpu: 100m
       memory: 200Mi
+  serviceSpec:
+    spec:
+      type: LoadBalancer
