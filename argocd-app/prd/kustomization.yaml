@@ -3,8 +3,8 @@ kind: Kustomization
 resources:
   - ../base
 patchesStrategicMerge:
-  # - argocd.yaml
-  # - argocd-app.yaml
+  - argocd.yaml
+  - argocd-app.yaml
   # - argocd-notification.yaml
   - metallb.yaml
   - metrics-server.yaml
