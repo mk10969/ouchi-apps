@@ -58,7 +58,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/resources
-        value: {mgr: {limits: {cpu: "500m", memory: "512Mi"}, requests: {cpu: "500m", memory: "512Mi"}}, mon: {limits: {cpu: "500m", memory: "2Gi"}, requests: {cpu: "500m", memory: "1Gi"}}}
+        value: {mgr: {limits: {cpu: "500m", memory: "512Mi"}, requests: {cpu: "500m", memory: "512Mi"}}, mon: {limits: {memory: "2Gi"}, requests: {cpu: "500m", memory: "1Gi"}}}
 
 images:
   - name: ceph/ceph
