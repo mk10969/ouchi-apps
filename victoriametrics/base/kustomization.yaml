@@ -6,7 +6,7 @@ resources:
   - upstream/rbac.yaml
   # vm single
   - vmsingle.yaml
-
+  - vmagent-single.yaml
   # vm cluster
   # - vmagent.yaml
   # - vmalert.yaml
