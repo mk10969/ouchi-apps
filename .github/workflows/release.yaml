@@ -18,7 +18,6 @@ jobs:
           kustomize_build_dir: "./argocd/prd"
           kustomize_comment: false
           kustomize_output_file: "./argocd.yaml"
-          enable_alpha_plugins: true
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
