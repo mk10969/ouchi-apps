@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-DASHBOARD_VERSION="v0.16.0"
-
-curl -sfL https://github.com/tektoncd/dashboard/releases/download/$DASHBOARD_VERSION/tekton-dashboard-release.yaml -o ./base/upstream/tekton-dashboard.yaml
-curl -sfL https://github.com/tektoncd/dashboard/releases/download/$DASHBOARD_VERSION/tekton-dashboard-release-readonly.yaml -o ./base/upstream/tekton-dashboard-readonly.yaml
