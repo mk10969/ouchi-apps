@@ -40,13 +40,12 @@ spec:
               fieldPath: metadata.name
         - name: OPERATOR_NAME
           value: vm-operator
-        image: victoriametrics/operator:v0.12.2
-        imagePullPolicy: Always
+        image: victoriametrics/operator:v0.18.2
         name: manager
         resources:
           limits:
             cpu: 120m
-            memory: 320Mi
+            memory: 520Mi
           requests:
             cpu: 80m
             memory: 120Mi

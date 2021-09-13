@@ -13,7 +13,9 @@ ingress_controller_version      := "v1.0.0"
 kube_state_metrics_version      := "v2.2.0"
 metallb_version                 := "v0.10.2"
 metrics_server_version          := "v0.5.0"
-
+rook_ceph_version               := "v"
+rook_tool_version               := "v"
+vm_operator_version             := "v0.18.2"
 
 
 ##### commands ######
@@ -93,3 +95,20 @@ metallb:
 metrics-server:
     curl -sLf -o ./metrics-server/base/upstream/components.yaml \
         https://github.com/kubernetes-sigs/metrics-server/releases/download/{{ metrics_server_version }}/components.yaml
+
+# rook-ceph update
+rook-ceph:
+    @echo "rook ceph!!!"
+
+# victoriametrics update
+victoriametrics:
+    curl -sLf -o ./victoriametrics/base/upstream/bundle_crd.zip \
+        https://github.com/VictoriaMetrics/operator/releases/download/{{ vm_operator_version }}/bundle_crd.zip
+    unzip -o -d ./victoriametrics/base/upstream/ ./victoriametrics/base/upstream/bundle_crd.zip > /dev/null 2>&1
+
+    cp -pfr ./victoriametrics/base/upstream/release/crds/crd.yaml ./victoriametrics/base/upstream/crd.yaml
+    cp -pfr ./victoriametrics/base/upstream/release/operator/manager.yaml ./victoriametrics/base/upstream/manager.yaml
+    cp -pfr ./victoriametrics/base/upstream/release/operator/rbac.yaml ./victoriametrics/base/upstream/rbac.yaml
+
+    rm -fr ./victoriametrics/base/upstream/release
+    rm -fr ./victoriametrics/base/upstream/bundle_crd.zip
