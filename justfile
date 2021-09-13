@@ -3,7 +3,7 @@ set shell := ["bash", "-uc"]
 
 
 ##### variables ######
-app_version                     := "v1.0.1"
+app_version                     := "v1.0.2"
 ### apps ###
 argocd_version                  := "v2.1.2"
 argocd_notification_version     := "v1.1.1"

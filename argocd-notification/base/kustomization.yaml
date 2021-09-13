@@ -4,3 +4,6 @@ resources:
   - upstream/install.yaml
 patchesStrategicMerge:
   - upstream/configmap.yaml
+images:
+  - name: argoprojlabs/argocd-notifications
+    newTag: latest

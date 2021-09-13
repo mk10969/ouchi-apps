@@ -6,15 +6,12 @@ resources:
   # - argocd-notification.yaml
   - metallb.yaml
   - metrics-server.yaml
-  # - ingress-controller.yaml ###一旦利用しない
-  # - tekton-pipeline.yaml
-  # - tekton-triggers.yaml
-  # - tekton-dashboard.yaml
-  # - tekton-app.yaml
-  - rook-ceph.yaml
-  - rook-tool.yaml
+  - kube-state-metrics.yaml
+  - ingress-controller.yaml
+
+  # - rook-ceph.yaml
+  # - rook-tool.yaml
   # - cert-manager.yaml
   ### monitoring ###
   # - grafana-operator.yaml
-  - kube-state-metrics.yaml
-  - victoriametrics.yaml
+  # - victoriametrics.yaml
