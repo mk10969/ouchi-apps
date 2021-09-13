@@ -8,7 +8,7 @@ app_version                     := "v1.0.0"
 argocd_version                  := "v2.1.2"
 argocd_notification_version     := "v1.1.1"
 cert_manager_version            := "v1.5.3"
-grafana_operator_version        := "3.10.3"
+grafana_operator_version        := "v3.10.3"
 
 
 ##### commands ######
@@ -43,7 +43,25 @@ cert-manager:
 
 # grafana-operator update
 grafana-operator:
-    curl -sLf -o ./grafana-operator/base/upstream/tmp/grafana-operator.tar.gz \
-        https://github.com/grafana-operator/grafana-operator/releases/download/v{{ grafana_operator_version }}/grafana-operator_{{ grafana_operator_version }}_linux_arm64.tar.gz
-
-
+    curl -sLf  -o ./grafana-operator/base/upstream/operator.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/operator.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/Grafana.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/crds/Grafana.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/GrafanaDashboard.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/crds/GrafanaDashboard.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/GrafanaDataSource.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/crds/GrafanaDataSource.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/cluster_role_aggregate_grafana_admin_edit.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/cluster_role_aggregate_grafana_view.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/cluster_roles/cluster_role_aggregate_grafana_view.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/cluster_role_binding_grafana_operator.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/cluster_roles/cluster_role_binding_grafana_operator.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/cluster_role_grafana_operator.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/cluster_roles/cluster_role_grafana_operator.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/role.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/roles/role.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/role_binding.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/roles/role_binding.yaml
+    curl -sLf -o ./grafana-operator/base/upstream/service_account.yaml \
+        https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/roles/service_account.yaml
