@@ -22,12 +22,27 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - configmaps
   - secrets
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resourceNames:
+  - argocd-notifications-cm
+  resources:
   - configmaps
   verbs:
   - get
-  - list
-  - watch
+- apiGroups:
+  - ""
+  resourceNames:
+  - argocd-notifications-secret
+  resources:
+  - secrets
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -87,7 +102,7 @@ spec:
       - command:
         - /app/argocd-notifications-backend
         - controller
-        image: argoprojlabs/argocd-notifications:v1.0.2
+        image: argoprojlabs/argocd-notifications:v1.1.1
         imagePullPolicy: Always
         name: argocd-notifications-controller
         volumeMounts:
