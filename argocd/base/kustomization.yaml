@@ -11,7 +11,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/template/spec/initContainers/0/image
-        value: "alinbalutoiu/argocd"
+        value: "mk10969/argocd"
   - target:
       group: apps
       version: v1
@@ -20,7 +20,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: "alinbalutoiu/argocd"
+        value: "mk10969/argocd"
   - target:
       group: apps
       version: v1
@@ -29,7 +29,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: "alinbalutoiu/argocd"
+        value: "mk10969/argocd"
   - target:
       group: apps
       version: v1
@@ -38,7 +38,7 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: "alinbalutoiu/argocd"
+        value: "mk10969/argocd"
 images:
-  - name: alinbalutoiu/argocd
-    newTag: v2.0.5
+  - name: mk10969/argocd
+    newTag: v2.1.2
