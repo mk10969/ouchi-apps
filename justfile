@@ -3,7 +3,7 @@ set shell := ["bash", "-uc"]
 
 
 ##### variables ######
-app_version                     := "v1.0.4"
+ouchi_k8s_version               := "v1.0.5"
 ### apps ###
 argocd_version                  := "v2.0.4"
 argocd_notification_version     := "v1.1.1"
@@ -21,15 +21,15 @@ vm_operator_version             := "v0.18.2"
 ##### commands ######
 # app version
 version:
-    @echo {{ app_version }}
+    @echo {{ ouchi_k8s_version }}
 
 # git tag
 tag:
-    git tag -a {{ app_version }} -m 'version up'
+    git tag -a {{ ouchi_k8s_version }} -m 'version up'
 
 # tag push
 push:
-    git push origin {{ app_version }}
+    git push origin {{ ouchi_k8s_version }}
 
 # argocd update
 argocd:
