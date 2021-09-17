@@ -3,9 +3,9 @@ set shell := ["bash", "-uc"]
 
 
 ##### variables ######
-ouchi_k8s_version               := "v1.0.6"
+ouchi_k8s_version               := "v1.1.0"
 ### apps ###
-argocd_version                  := "v2.0.0"
+argocd_version                  := "v2.0.4"
 argocd_notification_version     := "v1.1.1"
 cert_manager_version            := "v1.5.3"
 grafana_operator_version        := "v3.10.3"
@@ -35,6 +35,7 @@ push:
 argocd:
     curl -sfL -o ./argocd/base/upstream/install.yaml \
         https://raw.githubusercontent.com/argoproj/argo-cd/{{ argocd_version }}/manifests/install.yaml
+    sed -i -E 's/newTag: .*/newTag: {{ argocd_version }}/g' ./argocd/base/kustomization.yaml
 
 #  argocd-notification update
 argocd-notification:

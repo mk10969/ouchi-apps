@@ -41,4 +41,4 @@ patchesJson6902:
         value: "alinbalutoiu/argocd"
 images:
   - name: alinbalutoiu/argocd
-    newTag: v2.0.0
+    newTag: v2.0.4
