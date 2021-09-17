@@ -83,7 +83,16 @@ ingress-controller:
 
 # kube-state-metrics update
 kube-state-metrics:
-    @echo {{ kube_state_metrics_version }}
+    curl -sLf -o ./kube-state-metrics/base/upstream/cluster-role-binding.yaml \
+        https://raw.githubusercontent.com/kubernetes/kube-state-metrics/{{ kube_state_metrics_version }}/examples/standard/cluster-role-binding.yaml
+    curl -sLf -o ./kube-state-metrics/base/upstream/cluster-role.yaml \
+        https://raw.githubusercontent.com/kubernetes/kube-state-metrics/{{ kube_state_metrics_version }}/examples/standard/cluster-role.yaml
+    curl -sLf -o ./kube-state-metrics/base/upstream/deployment.yaml \
+        https://raw.githubusercontent.com/kubernetes/kube-state-metrics/{{ kube_state_metrics_version }}/examples/standard/deployment.yaml
+    curl -sLf -o ./kube-state-metrics/base/upstream/service-account.yaml \
+        https://raw.githubusercontent.com/kubernetes/kube-state-metrics/{{ kube_state_metrics_version }}/examples/standard/service-account.yaml
+    curl -sLf -o ./kube-state-metrics/base/upstream/service.yaml \
+        https://raw.githubusercontent.com/kubernetes/kube-state-metrics/{{ kube_state_metrics_version }}/examples/standard/service.yaml
 
 # metallb update
 metallb:
