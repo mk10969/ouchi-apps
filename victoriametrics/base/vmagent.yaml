@@ -2,37 +2,18 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMAgent
 metadata:
   name: vmagent
-  namespace: monitoring-system
+  namespace: monitoring
 spec:
   extraArgs:
     promscrape.maxScrapeSize: "33554432"
-  serviceScrapeSelector:
-    matchExpressions:
-      - key: managed-by
-        operator: NotIn
-        values:
-          - vm-operator
-  podScrapeSelector:
-    matchExpressions:
-      - key: managed-by
-        operator: NotIn
-        values:
-          - vm-operator
-  nodeScrapeSelector:
-    matchExpressions:
-      - key: managed-by
-        operator: NotIn
-        values:
-          - vm-operator
-  probeSelector:
-    matchExpressions:
-      - key: managed-by
-        operator: NotIn
-        values:
-          - vm-operator
+  serviceScrapeSelector: {}
+  podScrapeSelector: {}
+  probeSelector: {}
+  nodeScrapeSelector: {}
+  staticScrapeSelector: {}
   replicaCount: 3
   remoteWrite:
-    - url: "http://vminsert-vmcluster.monitoring-system.svc:8480/insert/0/prometheus/api/v1/write"
+    - url: "http://vminsert-vmcluster.monitoring.svc:8480/insert/0/prometheus/api/v1/write"
   resources:
     requests:
       cpu: 100m
@@ -41,4 +22,4 @@ spec:
     minAvailable: 2
   serviceSpec:
     spec:
-      type: LoadBalancer
+      type: ClusterIP

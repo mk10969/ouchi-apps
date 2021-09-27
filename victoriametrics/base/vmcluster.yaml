@@ -2,7 +2,7 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMCluster
 metadata:
   name: vmcluster
-  namespace: monitoring-system
+  namespace: monitoring
 spec:
   retentionPeriod: "10d"
   vmstorage:

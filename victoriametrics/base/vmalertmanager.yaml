@@ -2,7 +2,7 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMAlertmanager
 metadata:
   name: vmalertmanager
-  namespace: monitoring-system
+  namespace: monitoring
 spec:
   replicaCount: 3
   # VMAlertmanager is able to detect configSecret content change and to reload alertmanager.

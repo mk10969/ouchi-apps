@@ -1,0 +1,14 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMStaticScrape
+metadata:
+  name: vmstaticscrape
+spec:
+  jobName: static
+  targetEndpoints:
+    - targets:
+        [
+          "100.64.1.101:9100",
+          "100.64.1.102:9100",
+          "100.64.1.103:9100",
+          "100.64.1.104:9100",
+        ]

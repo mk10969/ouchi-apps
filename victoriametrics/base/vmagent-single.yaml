@@ -2,17 +2,22 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMAgent
 metadata:
   name: vmagent-single
-  namespace: monitoring-system
+  namespace: monitoring
 spec:
   extraArgs:
     promscrape.maxScrapeSize: "33554432"
+  serviceScrapeSelector: {}
+  podScrapeSelector: {}
+  probeSelector: {}
+  nodeScrapeSelector: {}
+  staticScrapeSelector: {}
   replicaCount: 1
   remoteWrite:
-    - url: "http://vmsingle-vmsingle.monitoring-system.svc:8429/api/v1/write"
+    - url: "http://vmsingle-vmsingle.monitoring.svc:8429/api/v1/write"
   resources:
     requests:
       cpu: 100m
       memory: 200Mi
   serviceSpec:
     spec:
-      type: LoadBalancer
+      type: ClusterIP
