@@ -20,6 +20,3 @@ spec:
       memory: 200Mi
   podDisruptionBudget:
     minAvailable: 2
-  serviceSpec:
-    spec:
-      type: ClusterIP

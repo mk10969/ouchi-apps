@@ -8,7 +8,7 @@ spec:
     - name: vmcluster
       type: prometheus
       access: proxy
-      url: http://vmselect-vmcluster.monitoring-system.svc:8481/select/0/prometheus
+      url: http://vmsingle-vmsingle.monitoring.svc:8481/select/0/prometheus
       version: 1
       isDefault: true
       editable: false
