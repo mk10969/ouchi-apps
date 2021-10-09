@@ -3,7 +3,7 @@ kind: VMStaticScrape
 metadata:
   name: vmstaticscrape
 spec:
-  jobName: static
+  jobName: node
   targetEndpoints:
     - targets:
         [
