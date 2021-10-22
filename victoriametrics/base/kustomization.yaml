@@ -5,11 +5,14 @@ resources:
   - upstream/crd.yaml
   - upstream/manager.yaml
   - upstream/rbac.yaml
+
   # node exporter scraping
   - vmstaticscrape.yaml
+
   # vm single
-  - vmsingle.yaml
+  - vmcluster-single.yaml
   - vmagent-single.yaml
+
   # vm cluster
   # - vmagent.yaml
   # - vmalert.yaml

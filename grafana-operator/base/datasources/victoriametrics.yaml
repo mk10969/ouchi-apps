@@ -5,12 +5,22 @@ metadata:
 spec:
   name: victoriametrics.yaml
   datasources:
+    - name: vmsingle
+      type: prometheus
+      access: proxy
+      url: http://vmsingle-vmsingle.monitoring.svc:8429
+      version: 1
+      isDefault: true
+      editable: false
+      jsonData:
+        tlsSkipVerify: true
+        timeInterval: "30s"
     - name: vmcluster
       type: prometheus
       access: proxy
-      url: http://vmsingle-vmsingle.monitoring.svc:8481/select/0/prometheus
+      url: http://vmselect-vmcluster.monitoring.svc:8481/select/0/prometheus
       version: 1
-      isDefault: true
+      isDefault: false
       editable: false
       jsonData:
         tlsSkipVerify: true
