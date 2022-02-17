@@ -16,4 +16,4 @@ patchesStrategicMerge:
   # - cert-manager.yaml
   ### monitoring ###
   # - grafana-operator.yaml
-  # - victoriametrics.yaml
+  - victoriametrics.yaml
