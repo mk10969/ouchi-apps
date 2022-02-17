@@ -8,7 +8,7 @@ resources:
   - metrics-server.yaml
   - kube-state-metrics.yaml
   # - grafana-operator.yaml
-  - victoriametrics.yaml
+  # - victoriametrics.yaml
 
   # - ingress-controller.yaml
   # - rook-ceph.yaml
