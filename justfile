@@ -5,10 +5,10 @@ set shell := ["bash", "-uc"]
 ##### variables ######
 ouchi_k8s_version               := "v1.1.1"
 ### apps ###
-argocd_version                  := "v2.0.4"
+argocd_version                  := "v2.2.2"
 argocd_notification_version     := "v1.1.1"
 cert_manager_version            := "v1.5.3"
-grafana_operator_version        := "v3.10.3"
+grafana_operator_version        := "v4.0.1"
 ingress_controller_version      := "v1.0.0"
 kube_state_metrics_version      := "v2.2.0"
 metallb_version                 := "v0.10.2"
@@ -51,6 +51,8 @@ cert-manager:
 
 # grafana-operator update
 grafana-operator:
+    ###### 結構変わっていて、めんどくさい。。。#######
+
     curl -sLf  -o ./grafana-operator/base/upstream/operator.yaml \
         https://raw.githubusercontent.com/integr8ly/grafana-operator/{{ grafana_operator_version }}/deploy/operator.yaml
     curl -sLf -o ./grafana-operator/base/upstream/Grafana.yaml \

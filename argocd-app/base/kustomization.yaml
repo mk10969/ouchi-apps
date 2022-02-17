@@ -7,11 +7,10 @@ resources:
   - metallb.yaml
   - metrics-server.yaml
   - kube-state-metrics.yaml
-  - ingress-controller.yaml
+  # - grafana-operator.yaml
+  - victoriametrics.yaml
 
+  # - ingress-controller.yaml
   # - rook-ceph.yaml
   # - rook-tool.yaml
   # - cert-manager.yaml
-  ### monitoring ###
-  # - grafana-operator.yaml
-  - victoriametrics.yaml
