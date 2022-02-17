@@ -4,8 +4,7 @@ namespace: monitoring
 resources:
   - upstream/crd.yaml
   - upstream/manager.yaml
-  ### defaultで禁止になったっぽい
-  # - upstream/rbac.yaml
+  - upstream/rbac.yaml
 
   # node exporter scraping
   - vmstaticscrape.yaml
