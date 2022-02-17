@@ -34,13 +34,7 @@ spec:
         env:
         - name: WATCH_NAMESPACE
           value: ""
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: OPERATOR_NAME
-          value: vm-operator
-        image: victoriametrics/operator:v0.18.2
+        image: victoriametrics/operator:v0.23.2
         name: manager
         resources:
           limits:

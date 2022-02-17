@@ -293,9 +293,9 @@ spec:
               externalLabels:
                 additionalProperties:
                   type: string
-                description: ExternalLabels The labels to add to any time series or
-                  alerts when communicating with external systems (federation, remote
-                  storage, etc).
+                description: ExternalLabels The labels to add to any time series scraped
+                  by vmagent. it doesn't affect metrics ingested directly by push
+                  API's
                 type: object
               extraArgs:
                 additionalProperties:
@@ -314,12 +314,14 @@ spec:
                       type: string
                     value:
                       description: 'Variable references $(VAR_NAME) are expanded using
-                        the previous defined environment variables in the container
+                        the previously defined environment variables in the container
                         and any service environment variables. If a variable cannot
                         be resolved, the reference in the input string will be unchanged.
-                        The $(VAR_NAME) syntax can be escaped with a double $$, ie:
-                        $$(VAR_NAME). Escaped references will never be expanded, regardless
-                        of whether the variable exists or not. Defaults to "".'
+                        Double $$ are reduced to a single $, which allows for escaping
+                        the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the
+                        string literal "$(VAR_NAME)". Escaped references will never
+                        be expanded, regardless of whether the variable exists or
+                        not. Defaults to "".'
                       type: string
                   required:
                   - name
@@ -507,7 +509,10 @@ spec:
                 type: string
               nodeScrapeNamespaceSelector:
                 description: NodeScrapeNamespaceSelector defines Namespaces to be
-                  selected for VMNodeScrape discovery. If nil, only check own namespace.
+                  selected for VMNodeScrape discovery. Works in combination with Selector.
+                  NamespaceSelector nil - only objects at VMAgent namespace. Selector
+                  nil - only objects at NamespaceSelector namespaces. If both nil
+                  - behaviour controlled by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -550,9 +555,72 @@ spec:
                       are ANDed.
                     type: object
                 type: object
+              nodeScrapeRelabelTemplate:
+                description: NodeScrapeRelabelTemplate defines relabel config, that
+                  will be added to each VMNodeScrape. it's useful for adding specific
+                  labels to all targets
+                items:
+                  description: 'RelabelConfig allows dynamic rewriting of the label
+                    set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section
+                    of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs'
+                  properties:
+                    action:
+                      description: Action to perform based on regex matching. Default
+                        is 'replace'
+                      type: string
+                    modulus:
+                      description: Modulus to take of the hash of the source label
+                        values.
+                      format: int64
+                      type: integer
+                    regex:
+                      description: Regular expression against which the extracted
+                        value is matched. Default is '(.*)'
+                      type: string
+                    replacement:
+                      description: Replacement value against which a regex replace
+                        is performed if the regular expression matches. Regex capture
+                        groups are available. Default is '$1'
+                      type: string
+                    separator:
+                      description: Separator placed between concatenated source label
+                        values. default is ';'.
+                      type: string
+                    source_labels:
+                      description: UnderScoreSourceLabels - additional form of source
+                        labels source_labels for compatibility with original relabel
+                        config. if set  both sourceLabels and source_labels, sourceLabels
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      items:
+                        type: string
+                      type: array
+                    sourceLabels:
+                      description: The source labels select values from existing labels.
+                        Their content is concatenated using the configured separator
+                        and matched against the configured regular expression for
+                        the replace, keep, and drop actions.
+                      items:
+                        type: string
+                      type: array
+                    target_label:
+                      description: UnderScoreTargetLabel - additional form of target
+                        label - target_label for compatibility with original relabel
+                        config. if set  both targetLabel and target_label, targetLabel
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      type: string
+                    targetLabel:
+                      description: Label to which the resulting value is written in
+                        a replace action. It is mandatory for replace actions. Regex
+                        capture groups are available.
+                      type: string
+                  type: object
+                type: array
               nodeScrapeSelector:
                 description: NodeScrapeSelector defines VMNodeScrape to be selected
-                  for scraping.
+                  for scraping. Works in combination with NamespaceSelector. NamespaceSelector
+                  nil - only objects at VMAgent namespace. Selector nil - only objects
+                  at NamespaceSelector namespaces. If both nil - behaviour controlled
+                  by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -664,7 +732,10 @@ spec:
                 type: object
               podScrapeNamespaceSelector:
                 description: PodScrapeNamespaceSelector defines Namespaces to be selected
-                  for VMPodScrape discovery. If nil, only check own namespace.
+                  for VMPodScrape discovery. Works in combination with Selector. NamespaceSelector
+                  nil - only objects at VMAgent namespace. Selector nil - only objects
+                  at NamespaceSelector namespaces. If both nil - behaviour controlled
+                  by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -707,9 +778,72 @@ spec:
                       are ANDed.
                     type: object
                 type: object
+              podScrapeRelabelTemplate:
+                description: PodScrapeRelabelTemplate defines relabel config, that
+                  will be added to each VMPodScrape. it's useful for adding specific
+                  labels to all targets
+                items:
+                  description: 'RelabelConfig allows dynamic rewriting of the label
+                    set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section
+                    of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs'
+                  properties:
+                    action:
+                      description: Action to perform based on regex matching. Default
+                        is 'replace'
+                      type: string
+                    modulus:
+                      description: Modulus to take of the hash of the source label
+                        values.
+                      format: int64
+                      type: integer
+                    regex:
+                      description: Regular expression against which the extracted
+                        value is matched. Default is '(.*)'
+                      type: string
+                    replacement:
+                      description: Replacement value against which a regex replace
+                        is performed if the regular expression matches. Regex capture
+                        groups are available. Default is '$1'
+                      type: string
+                    separator:
+                      description: Separator placed between concatenated source label
+                        values. default is ';'.
+                      type: string
+                    source_labels:
+                      description: UnderScoreSourceLabels - additional form of source
+                        labels source_labels for compatibility with original relabel
+                        config. if set  both sourceLabels and source_labels, sourceLabels
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      items:
+                        type: string
+                      type: array
+                    sourceLabels:
+                      description: The source labels select values from existing labels.
+                        Their content is concatenated using the configured separator
+                        and matched against the configured regular expression for
+                        the replace, keep, and drop actions.
+                      items:
+                        type: string
+                      type: array
+                    target_label:
+                      description: UnderScoreTargetLabel - additional form of target
+                        label - target_label for compatibility with original relabel
+                        config. if set  both targetLabel and target_label, targetLabel
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      type: string
+                    targetLabel:
+                      description: Label to which the resulting value is written in
+                        a replace action. It is mandatory for replace actions. Regex
+                        capture groups are available.
+                      type: string
+                  type: object
+                type: array
               podScrapeSelector:
                 description: PodScrapeSelector defines PodScrapes to be selected for
-                  target discovery.
+                  target discovery. Works in combination with NamespaceSelector. NamespaceSelector
+                  nil - only objects at VMAgent namespace. Selector nil - only objects
+                  at NamespaceSelector namespaces. If both nil - behaviour controlled
+                  by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -764,7 +898,10 @@ spec:
                 type: string
               probeNamespaceSelector:
                 description: ProbeNamespaceSelector defines Namespaces to be selected
-                  for VMProbe discovery. If nil, only check own namespace.
+                  for VMProbe discovery. Works in combination with Selector. NamespaceSelector
+                  nil - only objects at VMAgent namespace. Selector nil - only objects
+                  at NamespaceSelector namespaces. If both nil - behaviour controlled
+                  by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -807,9 +944,72 @@ spec:
                       are ANDed.
                     type: object
                 type: object
+              probeScrapeRelabelTemplate:
+                description: ProbeScrapeRelabelTemplate defines relabel config, that
+                  will be added to each VMProbeScrape. it's useful for adding specific
+                  labels to all targets
+                items:
+                  description: 'RelabelConfig allows dynamic rewriting of the label
+                    set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section
+                    of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs'
+                  properties:
+                    action:
+                      description: Action to perform based on regex matching. Default
+                        is 'replace'
+                      type: string
+                    modulus:
+                      description: Modulus to take of the hash of the source label
+                        values.
+                      format: int64
+                      type: integer
+                    regex:
+                      description: Regular expression against which the extracted
+                        value is matched. Default is '(.*)'
+                      type: string
+                    replacement:
+                      description: Replacement value against which a regex replace
+                        is performed if the regular expression matches. Regex capture
+                        groups are available. Default is '$1'
+                      type: string
+                    separator:
+                      description: Separator placed between concatenated source label
+                        values. default is ';'.
+                      type: string
+                    source_labels:
+                      description: UnderScoreSourceLabels - additional form of source
+                        labels source_labels for compatibility with original relabel
+                        config. if set  both sourceLabels and source_labels, sourceLabels
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      items:
+                        type: string
+                      type: array
+                    sourceLabels:
+                      description: The source labels select values from existing labels.
+                        Their content is concatenated using the configured separator
+                        and matched against the configured regular expression for
+                        the replace, keep, and drop actions.
+                      items:
+                        type: string
+                      type: array
+                    target_label:
+                      description: UnderScoreTargetLabel - additional form of target
+                        label - target_label for compatibility with original relabel
+                        config. if set  both targetLabel and target_label, targetLabel
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      type: string
+                    targetLabel:
+                      description: Label to which the resulting value is written in
+                        a replace action. It is mandatory for replace actions. Regex
+                        capture groups are available.
+                      type: string
+                  type: object
+                type: array
               probeSelector:
                 description: ProbeSelector defines VMProbe to be selected for target
-                  probing.
+                  probing. Works in combination with NamespaceSelector. NamespaceSelector
+                  nil - only objects at VMAgent namespace. Selector nil - only objects
+                  at NamespaceSelector namespaces. If both nil - behaviour controlled
+                  by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -1385,13 +1585,23 @@ spec:
                   common container settings. This defaults to the default PodSecurityContext.
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
+              selectAllByDefault:
+                description: 'SelectAllByDefault changes default behavior for empty
+                  CRD selectors, such ServiceScrapeSelector. with selectAllScrapes:
+                  true and empty serviceScrapeSelector and ServiceScrapeNamespaceSelector
+                  Operator selects all exist serviceScrapes with selectAllScrapes:
+                  false - selects nothing'
+                type: boolean
               serviceAccountName:
                 description: ServiceAccountName is the name of the ServiceAccount
                   to use to run the VMAgent Pods.
                 type: string
               serviceScrapeNamespaceSelector:
                 description: ServiceScrapeNamespaceSelector Namespaces to be selected
-                  for VMServiceScrape discovery. If nil, only check own namespace.
+                  for VMServiceScrape discovery. Works in combination with Selector.
+                  NamespaceSelector nil - only objects at VMAgent namespace. Selector
+                  nil - only objects at NamespaceSelector namespaces. If both nil
+                  - behaviour controlled by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -1434,9 +1644,72 @@ spec:
                       are ANDed.
                     type: object
                 type: object
+              serviceScrapeRelabelTemplate:
+                description: ServiceScrapeRelabelTemplate defines relabel config,
+                  that will be added to each VMServiceScrape. it's useful for adding
+                  specific labels to all targets
+                items:
+                  description: 'RelabelConfig allows dynamic rewriting of the label
+                    set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section
+                    of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs'
+                  properties:
+                    action:
+                      description: Action to perform based on regex matching. Default
+                        is 'replace'
+                      type: string
+                    modulus:
+                      description: Modulus to take of the hash of the source label
+                        values.
+                      format: int64
+                      type: integer
+                    regex:
+                      description: Regular expression against which the extracted
+                        value is matched. Default is '(.*)'
+                      type: string
+                    replacement:
+                      description: Replacement value against which a regex replace
+                        is performed if the regular expression matches. Regex capture
+                        groups are available. Default is '$1'
+                      type: string
+                    separator:
+                      description: Separator placed between concatenated source label
+                        values. default is ';'.
+                      type: string
+                    source_labels:
+                      description: UnderScoreSourceLabels - additional form of source
+                        labels source_labels for compatibility with original relabel
+                        config. if set  both sourceLabels and source_labels, sourceLabels
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      items:
+                        type: string
+                      type: array
+                    sourceLabels:
+                      description: The source labels select values from existing labels.
+                        Their content is concatenated using the configured separator
+                        and matched against the configured regular expression for
+                        the replace, keep, and drop actions.
+                      items:
+                        type: string
+                      type: array
+                    target_label:
+                      description: UnderScoreTargetLabel - additional form of target
+                        label - target_label for compatibility with original relabel
+                        config. if set  both targetLabel and target_label, targetLabel
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      type: string
+                    targetLabel:
+                      description: Label to which the resulting value is written in
+                        a replace action. It is mandatory for replace actions. Regex
+                        capture groups are available.
+                      type: string
+                  type: object
+                type: array
               serviceScrapeSelector:
                 description: ServiceScrapeSelector defines ServiceScrapes to be selected
-                  for target discovery.
+                  for target discovery. Works in combination with NamespaceSelector.
+                  NamespaceSelector nil - only objects at VMAgent namespace. Selector
+                  nil - only objects at NamespaceSelector namespaces. If both nil
+                  - behaviour controlled by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -1531,7 +1804,10 @@ spec:
                 x-kubernetes-preserve-unknown-fields: true
               staticScrapeNamespaceSelector:
                 description: StaticScrapeNamespaceSelector defines Namespaces to be
-                  selected for VMStaticScrape discovery. If nil, only check own namespace.
+                  selected for VMStaticScrape discovery. Works in combination with
+                  NamespaceSelector. NamespaceSelector nil - only objects at VMAgent
+                  namespace. Selector nil - only objects at NamespaceSelector namespaces.
+                  If both nil - behaviour controlled by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -1574,9 +1850,72 @@ spec:
                       are ANDed.
                     type: object
                 type: object
+              staticScrapeRelabelTemplate:
+                description: StaticScrapeRelabelTemplate defines relabel config, that
+                  will be added to each VMStaticScrape. it's useful for adding specific
+                  labels to all targets
+                items:
+                  description: 'RelabelConfig allows dynamic rewriting of the label
+                    set, being applied to samples before ingestion. It defines `<metric_relabel_configs>`-section
+                    of configuration. More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs'
+                  properties:
+                    action:
+                      description: Action to perform based on regex matching. Default
+                        is 'replace'
+                      type: string
+                    modulus:
+                      description: Modulus to take of the hash of the source label
+                        values.
+                      format: int64
+                      type: integer
+                    regex:
+                      description: Regular expression against which the extracted
+                        value is matched. Default is '(.*)'
+                      type: string
+                    replacement:
+                      description: Replacement value against which a regex replace
+                        is performed if the regular expression matches. Regex capture
+                        groups are available. Default is '$1'
+                      type: string
+                    separator:
+                      description: Separator placed between concatenated source label
+                        values. default is ';'.
+                      type: string
+                    source_labels:
+                      description: UnderScoreSourceLabels - additional form of source
+                        labels source_labels for compatibility with original relabel
+                        config. if set  both sourceLabels and source_labels, sourceLabels
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      items:
+                        type: string
+                      type: array
+                    sourceLabels:
+                      description: The source labels select values from existing labels.
+                        Their content is concatenated using the configured separator
+                        and matched against the configured regular expression for
+                        the replace, keep, and drop actions.
+                      items:
+                        type: string
+                      type: array
+                    target_label:
+                      description: UnderScoreTargetLabel - additional form of target
+                        label - target_label for compatibility with original relabel
+                        config. if set  both targetLabel and target_label, targetLabel
+                        has priority. for details https://github.com/VictoriaMetrics/operator/issues/131
+                      type: string
+                    targetLabel:
+                      description: Label to which the resulting value is written in
+                        a replace action. It is mandatory for replace actions. Regex
+                        capture groups are available.
+                      type: string
+                  type: object
+                type: array
               staticScrapeSelector:
                 description: StaticScrapeSelector defines PodScrapes to be selected
-                  for target discovery.
+                  for target discovery. Works in combination with NamespaceSelector.
+                  If both nil - match everything. NamespaceSelector nil - only objects
+                  at VMAgent namespace. Selector nil - only objects at NamespaceSelector
+                  namespaces.
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -4384,13 +4723,16 @@ spec:
               configMaps:
                 description: ConfigMaps is a list of ConfigMaps in the same namespace
                   as the VMAlertmanager object, which shall be mounted into the VMAlertmanager
-                  Pods. The ConfigMaps are mounted into /etc/alertmanager/configmaps/<configmap-name>.
+                  Pods. The ConfigMaps are mounted into /etc/vm/configs/<configmap-name>.
                 items:
                   type: string
                 type: array
               configNamespaceSelector:
                 description: ' ConfigNamespaceSelector defines namespace selector
-                  for VMAlertmanagerConfig. If nil, own namespace will be used.'
+                  for VMAlertmanagerConfig. Works in combination with Selector. NamespaceSelector
+                  nil - only objects at VMAlertmanager namespace. Selector nil - only
+                  objects at NamespaceSelector namespaces. If both nil - behaviour
+                  controlled by selectAllByDefault'
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -4448,9 +4790,11 @@ spec:
                 type: string
               configSelector:
                 description: ConfigSelector defines selector for VMAlertmanagerConfig,
-                  result config will be merged with with Raw or Secret config. If
-                  nil, VMAlertmanagerConfig wont be used. If empty - {}, everything
-                  will be selected based on namespace selector.
+                  result config will be merged with with Raw or Secret config. Works
+                  in combination with NamespaceSelector. NamespaceSelector nil - only
+                  objects at VMAlertmanager namespace. Selector nil - only objects
+                  at NamespaceSelector namespaces. If both nil - behaviour controlled
+                  by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -4505,6 +4849,11 @@ spec:
                   type: object
                   x-kubernetes-preserve-unknown-fields: true
                 type: array
+              disableNamespaceMatcher:
+                description: DisableNamespaceMatcher disables namespace label matcher
+                  for VMAlertmanagerConfig It may be useful if alert doesn't have
+                  namespace label for some reason
+                type: boolean
               dnsPolicy:
                 description: DNSPolicy sets DNS policy for the pod
                 type: string
@@ -4530,12 +4879,14 @@ spec:
                       type: string
                     value:
                       description: 'Variable references $(VAR_NAME) are expanded using
-                        the previous defined environment variables in the container
+                        the previously defined environment variables in the container
                         and any service environment variables. If a variable cannot
                         be resolved, the reference in the input string will be unchanged.
-                        The $(VAR_NAME) syntax can be escaped with a double $$, ie:
-                        $$(VAR_NAME). Escaped references will never be expanded, regardless
-                        of whether the variable exists or not. Defaults to "".'
+                        Double $$ are reduced to a single $, which allows for escaping
+                        the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the
+                        string literal "$(VAR_NAME)". Escaped references will never
+                        be expanded, regardless of whether the variable exists or
+                        not. Defaults to "".'
                       type: string
                   required:
                   - name
@@ -4725,6 +5076,11 @@ spec:
                   (milliseconds seconds minutes hours).
                 pattern: '[0-9]+(ms|s|m|h)'
                 type: string
+              rollingUpdateStrategy:
+                description: RollingUpdateStrategy defines strategy for application
+                  updates Default is OnDelete, in this case operator handles update
+                  process Can be changed for RollingUpdate
+                type: string
               routePrefix:
                 description: RoutePrefix VMAlertmanager registers HTTP handlers for.
                   This is useful, if using ExternalURL and a proxy is rewriting HTTP
@@ -4742,7 +5098,7 @@ spec:
               secrets:
                 description: Secrets is a list of Secrets in the same namespace as
                   the VMAlertmanager object, which shall be mounted into the VMAlertmanager
-                  Pods. The Secrets are mounted into /etc/alertmanager/secrets/<secret-name>
+                  Pods. The Secrets are mounted into /etc/vm/secrets/<secret-name>
                 items:
                   type: string
                 type: array
@@ -4751,6 +5107,13 @@ spec:
                   common container settings. This defaults to the default PodSecurityContext.
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
+              selectAllByDefault:
+                description: 'SelectAllByDefault changes default behavior for empty
+                  CRD selectors, such ConfigSelector. with selectAllScrapes: true
+                  and undefined ConfigSelector and ConfigNamespaceSelector Operator
+                  selects all exist alertManagerConfigs with selectAllScrapes: false
+                  - selects nothing'
+                type: boolean
               serviceAccountName:
                 description: ServiceAccountName is the name of the ServiceAccount
                   to use
@@ -4893,14 +5256,51 @@ spec:
                           dataSource:
                             description: 'This field can be used to specify either:
                               * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)
-                              * An existing PVC (PersistentVolumeClaim) * An existing
-                              custom resource that implements data population (Alpha)
-                              In order to use custom resource types that implement
-                              data population, the AnyVolumeDataSource feature gate
-                              must be enabled. If the provisioner or an external controller
-                              can support the specified data source, it will create
-                              a new volume based on the contents of the specified
-                              data source.'
+                              * An existing PVC (PersistentVolumeClaim) If the provisioner
+                              or an external controller can support the specified
+                              data source, it will create a new volume based on the
+                              contents of the specified data source. If the AnyVolumeDataSource
+                              feature gate is enabled, this field will always have
+                              the same contents as the DataSourceRef field.'
+                            properties:
+                              apiGroup:
+                                description: APIGroup is the group for the resource
+                                  being referenced. If APIGroup is not specified,
+                                  the specified Kind must be in the core API group.
+                                  For any other third-party types, APIGroup is required.
+                                type: string
+                              kind:
+                                description: Kind is the type of resource being referenced
+                                type: string
+                              name:
+                                description: Name is the name of resource being referenced
+                                type: string
+                            required:
+                            - kind
+                            - name
+                            type: object
+                          dataSourceRef:
+                            description: 'Specifies the object from which to populate
+                              the volume with data, if a non-empty volume is desired.
+                              This may be any local object from a non-empty API group
+                              (non core object) or a PersistentVolumeClaim object.
+                              When this field is specified, volume binding will only
+                              succeed if the type of the specified object matches
+                              some installed volume populator or dynamic provisioner.
+                              This field will replace the functionality of the DataSource
+                              field and as such if both fields are non-empty, they
+                              must have the same value. For backwards compatibility,
+                              both fields (DataSource and DataSourceRef) will be set
+                              to the same value automatically if one of them is empty
+                              and the other is non-empty. There are two important
+                              differences between DataSource and DataSourceRef: *
+                              While DataSource only allows two specific types of objects,
+                              DataSourceRef   allows any non-core object, as well
+                              as PersistentVolumeClaim objects. * While DataSource
+                              ignores disallowed values (dropping them), DataSourceRef   preserves
+                              all values, and generates an error if a disallowed value
+                              is   specified. (Alpha) Using this field requires the
+                              AnyVolumeDataSource feature gate to be enabled.'
                             properties:
                               apiGroup:
                                 description: APIGroup is the group for the resource
@@ -4920,7 +5320,11 @@ spec:
                             type: object
                           resources:
                             description: 'Resources represents the minimum resources
-                              the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources'
+                              the volume should have. If RecoverVolumeExpansionFailure
+                              feature is enabled users are allowed to specify resource
+                              requirements that are lower than previous value but
+                              must still be higher than capacity recorded in the status
+                              field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources'
                             properties:
                               limits:
                                 additionalProperties:
@@ -5016,6 +5420,27 @@ spec:
                             items:
                               type: string
                             type: array
+                          allocatedResources:
+                            additionalProperties:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            description: The storage resource within AllocatedResources
+                              tracks the capacity allocated to a PVC. It may be larger
+                              than the actual capacity when a volume expansion operation
+                              is requested. For storage quota, the larger value from
+                              allocatedResources and PVC.spec.resources is used. If
+                              allocatedResources is not set, PVC.spec.resources alone
+                              is used for quota calculation. If a volume expansion
+                              capacity request is lowered, allocatedResources is only
+                              lowered if there are no expansion operations in progress
+                              and if the actual volume capacity is equal or lower
+                              than the requested capacity. This is an alpha field
+                              and requires enabling RecoverVolumeExpansionFailure
+                              feature.
+                            type: object
                           capacity:
                             additionalProperties:
                               anyOf:
@@ -5067,6 +5492,13 @@ spec:
                             type: array
                           phase:
                             description: Phase represents the current phase of PersistentVolumeClaim.
+                            type: string
+                          resizeStatus:
+                            description: ResizeStatus stores status of resize operation.
+                              ResizeStatus is not set by default but when expansion
+                              is complete resizeStatus is set to empty string by resize
+                              controller or kubelet. This is an alpha field and requires
+                              enabling RecoverVolumeExpansionFailure feature.
                             type: string
                         type: object
                     type: object
@@ -5505,12 +5937,14 @@ spec:
                       type: string
                     value:
                       description: 'Variable references $(VAR_NAME) are expanded using
-                        the previous defined environment variables in the container
+                        the previously defined environment variables in the container
                         and any service environment variables. If a variable cannot
                         be resolved, the reference in the input string will be unchanged.
-                        The $(VAR_NAME) syntax can be escaped with a double $$, ie:
-                        $$(VAR_NAME). Escaped references will never be expanded, regardless
-                        of whether the variable exists or not. Defaults to "".'
+                        Double $$ are reduced to a single $, which allows for escaping
+                        the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the
+                        string literal "$(VAR_NAME)". Escaped references will never
+                        be expanded, regardless of whether the variable exists or
+                        not. Defaults to "".'
                       type: string
                   required:
                   - name
@@ -5649,6 +6083,74 @@ spec:
                         - key
                         type: object
                     type: object
+                  selector:
+                    description: Selector allows service discovery for alertmanager
+                      in this case all matched vmalertmanager replicas will be added
+                      into vmalert notifier.url as statefulset pod.fqdn
+                    properties:
+                      labelSelector:
+                        description: A label selector is a label query over a set
+                          of resources. The result of matchLabels and matchExpressions
+                          are ANDed. An empty label selector matches all objects.
+                          A null label selector matches no objects.
+                        properties:
+                          matchExpressions:
+                            description: matchExpressions is a list of label selector
+                              requirements. The requirements are ANDed.
+                            items:
+                              description: A label selector requirement is a selector
+                                that contains values, a key, and an operator that
+                                relates the key and values.
+                              properties:
+                                key:
+                                  description: key is the label key that the selector
+                                    applies to.
+                                  type: string
+                                operator:
+                                  description: operator represents a key's relationship
+                                    to a set of values. Valid operators are In, NotIn,
+                                    Exists and DoesNotExist.
+                                  type: string
+                                values:
+                                  description: values is an array of string values.
+                                    If the operator is In or NotIn, the values array
+                                    must be non-empty. If the operator is Exists or
+                                    DoesNotExist, the values array must be empty.
+                                    This array is replaced during a strategic merge
+                                    patch.
+                                  items:
+                                    type: string
+                                  type: array
+                              required:
+                              - key
+                              - operator
+                              type: object
+                            type: array
+                          matchLabels:
+                            additionalProperties:
+                              type: string
+                            description: matchLabels is a map of {key,value} pairs.
+                              A single {key,value} in the matchLabels map is equivalent
+                              to an element of matchExpressions, whose key field is
+                              "key", the operator is "In", and the values array contains
+                              only "value". The requirements are ANDed.
+                            type: object
+                        type: object
+                      namespaceSelector:
+                        description: NamespaceSelector is a selector for selecting
+                          either all namespaces or a list of namespaces.
+                        properties:
+                          any:
+                            description: Boolean describing whether all namespaces
+                              are selected in contrast to a list restricting them.
+                            type: boolean
+                          matchNames:
+                            description: List of namespace names.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                    type: object
                   tlsConfig:
                     description: TLSConfig describes tls configuration for notifier
                     properties:
@@ -5776,10 +6278,8 @@ spec:
                         type: string
                     type: object
                   url:
-                    description: AlertManager url. Required parameter. E.g. http://127.0.0.1:9093
+                    description: AlertManager url.  E.g. http://127.0.0.1:9093
                     type: string
-                required:
-                - url
                 type: object
               notifiers:
                 description: Notifiers prometheus alertmanager endpoints. Required
@@ -5837,6 +6337,74 @@ spec:
                               type: boolean
                           required:
                           - key
+                          type: object
+                      type: object
+                    selector:
+                      description: Selector allows service discovery for alertmanager
+                        in this case all matched vmalertmanager replicas will be added
+                        into vmalert notifier.url as statefulset pod.fqdn
+                      properties:
+                        labelSelector:
+                          description: A label selector is a label query over a set
+                            of resources. The result of matchLabels and matchExpressions
+                            are ANDed. An empty label selector matches all objects.
+                            A null label selector matches no objects.
+                          properties:
+                            matchExpressions:
+                              description: matchExpressions is a list of label selector
+                                requirements. The requirements are ANDed.
+                              items:
+                                description: A label selector requirement is a selector
+                                  that contains values, a key, and an operator that
+                                  relates the key and values.
+                                properties:
+                                  key:
+                                    description: key is the label key that the selector
+                                      applies to.
+                                    type: string
+                                  operator:
+                                    description: operator represents a key's relationship
+                                      to a set of values. Valid operators are In,
+                                      NotIn, Exists and DoesNotExist.
+                                    type: string
+                                  values:
+                                    description: values is an array of string values.
+                                      If the operator is In or NotIn, the values array
+                                      must be non-empty. If the operator is Exists
+                                      or DoesNotExist, the values array must be empty.
+                                      This array is replaced during a strategic merge
+                                      patch.
+                                    items:
+                                      type: string
+                                    type: array
+                                required:
+                                - key
+                                - operator
+                                type: object
+                              type: array
+                            matchLabels:
+                              additionalProperties:
+                                type: string
+                              description: matchLabels is a map of {key,value} pairs.
+                                A single {key,value} in the matchLabels map is equivalent
+                                to an element of matchExpressions, whose key field
+                                is "key", the operator is "In", and the values array
+                                contains only "value". The requirements are ANDed.
+                              type: object
+                          type: object
+                        namespaceSelector:
+                          description: NamespaceSelector is a selector for selecting
+                            either all namespaces or a list of namespaces.
+                          properties:
+                            any:
+                              description: Boolean describing whether all namespaces
+                                are selected in contrast to a list restricting them.
+                              type: boolean
+                            matchNames:
+                              description: List of namespace names.
+                              items:
+                                type: string
+                              type: array
                           type: object
                       type: object
                     tlsConfig:
@@ -5967,10 +6535,8 @@ spec:
                           type: string
                       type: object
                     url:
-                      description: AlertManager url. Required parameter. E.g. http://127.0.0.1:9093
+                      description: AlertManager url.  E.g. http://127.0.0.1:9093
                       type: string
-                  required:
-                  - url
                   type: object
                 type: array
               podDisruptionBudget:
@@ -6040,9 +6606,10 @@ spec:
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
               remoteRead:
-                description: RemoteRead victoria metrics address for loading state
-                  This configuration makes sense only if remoteWrite was configured
-                  before and has been successfully persisted its state.
+                description: RemoteRead Optional URL to read vmalert state (persisted
+                  via RemoteWrite) This configuration only makes sense if alerts state
+                  has been successfully persisted (via RemoteWrite) before. see -remoteRead.url
+                  docs in vmalerts for details. E.g. http://127.0.0.1:8428
                 properties:
                   basicAuth:
                     description: BasicAuth allow an endpoint to authenticate over
@@ -6234,7 +6801,10 @@ spec:
                 type: object
               remoteWrite:
                 description: RemoteWrite Optional URL to remote-write compatible storage
-                  where to write timeseriesbased on active alerts. E.g. http://127.0.0.1:8428
+                  to persist vmalert state and rule results to. Rule results will
+                  be persisted according to each rule. Alerts state will be persisted
+                  in the form of time series named ALERTS and ALERTS_FOR_STATE see
+                  -remoteWrite.url docs in vmalerts for details. E.g. http://127.0.0.1:8428
                 properties:
                   basicAuth:
                     description: BasicAuth allow an endpoint to authenticate over
@@ -6507,8 +7077,9 @@ spec:
                 type: object
               ruleNamespaceSelector:
                 description: RuleNamespaceSelector to be selected for VMRules discovery.
-                  If unspecified, only the same namespace as the vmalert object is
-                  in is used.
+                  Works in combination with Selector. If both nil - behaviour controlled
+                  by selectAllByDefault NamespaceSelector nil - only objects at VMAlert
+                  namespace.
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -6562,7 +7133,9 @@ spec:
                 type: array
               ruleSelector:
                 description: RuleSelector selector to select which VMRules to mount
-                  for loading alerting rules from.
+                  for loading alerting rules from. Works in combination with NamespaceSelector.
+                  If both nil - behaviour controlled by selectAllByDefault NamespaceSelector
+                  nil - only objects at VMAlert namespace.
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -6624,6 +7197,13 @@ spec:
                   common container settings. This defaults to the default PodSecurityContext.
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
+              selectAllByDefault:
+                description: 'SelectAllByDefault changes default behavior for empty
+                  CRD selectors, such RuleSelector. with selectAllByDefault: true
+                  and empty serviceScrapeSelector and RuleNamespaceSelector Operator
+                  selects all exist serviceScrapes with selectAllByDefault: false
+                  - selects nothing'
+                type: boolean
               serviceAccountName:
                 description: ServiceAccountName is the name of the ServiceAccount
                   to use to run the VMAlert Pods.
@@ -6903,12 +7483,14 @@ spec:
                       type: string
                     value:
                       description: 'Variable references $(VAR_NAME) are expanded using
-                        the previous defined environment variables in the container
+                        the previously defined environment variables in the container
                         and any service environment variables. If a variable cannot
                         be resolved, the reference in the input string will be unchanged.
-                        The $(VAR_NAME) syntax can be escaped with a double $$, ie:
-                        $$(VAR_NAME). Escaped references will never be expanded, regardless
-                        of whether the variable exists or not. Defaults to "".'
+                        Double $$ are reduced to a single $, which allows for escaping
+                        the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the
+                        string literal "$(VAR_NAME)". Escaped references will never
+                        be expanded, regardless of whether the variable exists or
+                        not. Defaults to "".'
                       type: string
                   required:
                   - name
@@ -7040,8 +7622,9 @@ spec:
                                         description: Resource is an ObjectRef to another
                                           Kubernetes resource in the namespace of
                                           the Ingress object. If resource is specified,
-                                          serviceName and servicePort must not be
-                                          specified.
+                                          a service.Name and service.Port must not
+                                          be specified. This is a mutually exclusive
+                                          setting with "Service".
                                         properties:
                                           apiGroup:
                                             description: APIGroup is the group for
@@ -7063,25 +7646,45 @@ spec:
                                         - kind
                                         - name
                                         type: object
-                                      serviceName:
-                                        description: Specifies the name of the referenced
-                                          service.
-                                        type: string
-                                      servicePort:
-                                        anyOf:
-                                        - type: integer
-                                        - type: string
-                                        description: Specifies the port of the referenced
-                                          service.
-                                        x-kubernetes-int-or-string: true
+                                      service:
+                                        description: Service references a Service
+                                          as a Backend. This is a mutually exclusive
+                                          setting with "Resource".
+                                        properties:
+                                          name:
+                                            description: Name is the referenced service.
+                                              The service must exist in the same namespace
+                                              as the Ingress object.
+                                            type: string
+                                          port:
+                                            description: Port of the referenced service.
+                                              A port name or port number is required
+                                              for a IngressServiceBackend.
+                                            properties:
+                                              name:
+                                                description: Name is the name of the
+                                                  port on the Service. This is a mutually
+                                                  exclusive setting with "Number".
+                                                type: string
+                                              number:
+                                                description: Number is the numerical
+                                                  port number (e.g. 80) on the Service.
+                                                  This is a mutually exclusive setting
+                                                  with "Name".
+                                                format: int32
+                                                type: integer
+                                            type: object
+                                        required:
+                                        - name
+                                        type: object
                                     type: object
                                   path:
                                     description: Path is matched against the path
                                       of an incoming request. Currently it can contain
                                       characters disallowed from the conventional
                                       "path" part of a URL as defined by RFC 3986.
-                                      Paths must begin with a '/'. When unspecified,
-                                      all paths from incoming requests are matched.
+                                      Paths must begin with a '/' and must be present
+                                      when using PathType with value "Exact" or "Prefix".
                                     type: string
                                   pathType:
                                     description: 'PathType determines the interpretation
@@ -7102,13 +7705,14 @@ spec:
                                       IngressClass. Implementations can treat this
                                       as a separate PathType   or treat it identically
                                       to Prefix or Exact path types. Implementations
-                                      are required to support all path types. Defaults
-                                      to ImplementationSpecific.'
+                                      are required to support all path types.'
                                     type: string
                                 required:
                                 - backend
+                                - pathType
                                 type: object
                               type: array
+                              x-kubernetes-list-type: atomic
                           required:
                           - paths
                           type: object
@@ -7130,10 +7734,11 @@ spec:
                           items:
                             type: string
                           type: array
+                          x-kubernetes-list-type: atomic
                         secretName:
                           description: SecretName is the name of the secret used to
-                            terminate SSL traffic on 443. Field is left optional to
-                            allow SSL routing based on SNI hostname alone. If the
+                            terminate TLS traffic on port 443. Field is left optional
+                            to allow TLS routing based on SNI hostname alone. If the
                             SNI host in a listener conflicts with the "Host" header
                             field used by an IngressRule, the SNI host is used for
                             termination and value of the Host header is used for routing.
@@ -7325,6 +7930,12 @@ spec:
                   common container settings. This defaults to the default PodSecurityContext.
                 type: object
                 x-kubernetes-preserve-unknown-fields: true
+              selectAllByDefault:
+                description: 'SelectAllByDefault changes default behavior for empty
+                  CRD selectors, such userSelector. with selectAllByDefault: true
+                  and empty userSelector and userNamespaceSelector Operator selects
+                  all exist users with selectAllByDefault: false - selects nothing'
+                type: boolean
               serviceAccountName:
                 description: ServiceAccountName is the name of the ServiceAccount
                   to use to run the VMAuth Pods.
@@ -7431,7 +8042,10 @@ spec:
                 type: array
               userNamespaceSelector:
                 description: UserNamespaceSelector Namespaces to be selected for  VMAuth
-                  discovery. If nil, only check own namespace.
+                  discovery. Works in combination with Selector. NamespaceSelector
+                  nil - only objects at VMAuth namespace. Selector nil - only objects
+                  at NamespaceSelector namespaces. If both nil - behaviour controlled
+                  by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -7476,7 +8090,9 @@ spec:
                 type: object
               userSelector:
                 description: UserSelector defines VMUser to be selected for config
-                  file generation.
+                  file generation. Works in combination with NamespaceSelector. NamespaceSelector
+                  nil - only objects at VMAuth namespace. If both nil - behaviour
+                  controlled by selectAllByDefault
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -7718,13 +8334,14 @@ spec:
                           type: string
                         value:
                           description: 'Variable references $(VAR_NAME) are expanded
-                            using the previous defined environment variables in the
-                            container and any service environment variables. If a
-                            variable cannot be resolved, the reference in the input
-                            string will be unchanged. The $(VAR_NAME) syntax can be
-                            escaped with a double $$, ie: $$(VAR_NAME). Escaped references
-                            will never be expanded, regardless of whether the variable
-                            exists or not. Defaults to "".'
+                            using the previously defined environment variables in
+                            the container and any service environment variables. If
+                            a variable cannot be resolved, the reference in the input
+                            string will be unchanged. Double $$ are reduced to a single
+                            $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                            "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                            Escaped references will never be expanded, regardless
+                            of whether the variable exists or not. Defaults to "".'
                           type: string
                       required:
                       - name
@@ -7809,6 +8426,8 @@ spec:
                     - PANIC
                     type: string
                   name:
+                    description: Name is deprecated and will be removed at 0.22.0
+                      release
                     type: string
                   nodeSelector:
                     additionalProperties:
@@ -7881,7 +8500,7 @@ spec:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   replicaCount:
-                    description: ReplicaCount is the expected size of the VMSelect
+                    description: ReplicaCount is the expected size of the VMInsert
                       cluster. The controller will eventually make the size of the
                       running cluster equal to the expected size.
                     format: int32
@@ -8185,13 +8804,14 @@ spec:
                           type: string
                         value:
                           description: 'Variable references $(VAR_NAME) are expanded
-                            using the previous defined environment variables in the
-                            container and any service environment variables. If a
-                            variable cannot be resolved, the reference in the input
-                            string will be unchanged. The $(VAR_NAME) syntax can be
-                            escaped with a double $$, ie: $$(VAR_NAME). Escaped references
-                            will never be expanded, regardless of whether the variable
-                            exists or not. Defaults to "".'
+                            using the previously defined environment variables in
+                            the container and any service environment variables. If
+                            a variable cannot be resolved, the reference in the input
+                            string will be unchanged. Double $$ are reduced to a single
+                            $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                            "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                            Escaped references will never be expanded, regardless
+                            of whether the variable exists or not. Defaults to "".'
                           type: string
                       required:
                       - name
@@ -8260,6 +8880,8 @@ spec:
                     - PANIC
                     type: string
                   name:
+                    description: Name is deprecated and will be removed at 0.22.0
+                      release
                     type: string
                   nodeSelector:
                     additionalProperties:
@@ -8404,6 +9026,11 @@ spec:
                           to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                         type: object
                     type: object
+                  rollingUpdateStrategy:
+                    description: RollingUpdateStrategy defines strategy for application
+                      updates Default is OnDelete, in this case operator handles update
+                      process Can be changed for RollingUpdate
+                    type: string
                   runtimeClassName:
                     description: RuntimeClassName - defines runtime class for kubernetes
                       pod. https://kubernetes.io/docs/concepts/containers/runtime-class/
@@ -8563,14 +9190,56 @@ spec:
                               dataSource:
                                 description: 'This field can be used to specify either:
                                   * An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)
-                                  * An existing PVC (PersistentVolumeClaim) * An existing
-                                  custom resource that implements data population
-                                  (Alpha) In order to use custom resource types that
-                                  implement data population, the AnyVolumeDataSource
-                                  feature gate must be enabled. If the provisioner
-                                  or an external controller can support the specified
-                                  data source, it will create a new volume based on
-                                  the contents of the specified data source.'
+                                  * An existing PVC (PersistentVolumeClaim) If the
+                                  provisioner or an external controller can support
+                                  the specified data source, it will create a new
+                                  volume based on the contents of the specified data
+                                  source. If the AnyVolumeDataSource feature gate
+                                  is enabled, this field will always have the same
+                                  contents as the DataSourceRef field.'
+                                properties:
+                                  apiGroup:
+                                    description: APIGroup is the group for the resource
+                                      being referenced. If APIGroup is not specified,
+                                      the specified Kind must be in the core API group.
+                                      For any other third-party types, APIGroup is
+                                      required.
+                                    type: string
+                                  kind:
+                                    description: Kind is the type of resource being
+                                      referenced
+                                    type: string
+                                  name:
+                                    description: Name is the name of resource being
+                                      referenced
+                                    type: string
+                                required:
+                                - kind
+                                - name
+                                type: object
+                              dataSourceRef:
+                                description: 'Specifies the object from which to populate
+                                  the volume with data, if a non-empty volume is desired.
+                                  This may be any local object from a non-empty API
+                                  group (non core object) or a PersistentVolumeClaim
+                                  object. When this field is specified, volume binding
+                                  will only succeed if the type of the specified object
+                                  matches some installed volume populator or dynamic
+                                  provisioner. This field will replace the functionality
+                                  of the DataSource field and as such if both fields
+                                  are non-empty, they must have the same value. For
+                                  backwards compatibility, both fields (DataSource
+                                  and DataSourceRef) will be set to the same value
+                                  automatically if one of them is empty and the other
+                                  is non-empty. There are two important differences
+                                  between DataSource and DataSourceRef: * While DataSource
+                                  only allows two specific types of objects, DataSourceRef   allows
+                                  any non-core object, as well as PersistentVolumeClaim
+                                  objects. * While DataSource ignores disallowed values
+                                  (dropping them), DataSourceRef   preserves all values,
+                                  and generates an error if a disallowed value is   specified.
+                                  (Alpha) Using this field requires the AnyVolumeDataSource
+                                  feature gate to be enabled.'
                                 properties:
                                   apiGroup:
                                     description: APIGroup is the group for the resource
@@ -8593,7 +9262,11 @@ spec:
                                 type: object
                               resources:
                                 description: 'Resources represents the minimum resources
-                                  the volume should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources'
+                                  the volume should have. If RecoverVolumeExpansionFailure
+                                  feature is enabled users are allowed to specify
+                                  resource requirements that are lower than previous
+                                  value but must still be higher than capacity recorded
+                                  in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources'
                                 properties:
                                   limits:
                                     additionalProperties:
@@ -8694,6 +9367,27 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                              allocatedResources:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: The storage resource within AllocatedResources
+                                  tracks the capacity allocated to a PVC. It may be
+                                  larger than the actual capacity when a volume expansion
+                                  operation is requested. For storage quota, the larger
+                                  value from allocatedResources and PVC.spec.resources
+                                  is used. If allocatedResources is not set, PVC.spec.resources
+                                  alone is used for quota calculation. If a volume
+                                  expansion capacity request is lowered, allocatedResources
+                                  is only lowered if there are no expansion operations
+                                  in progress and if the actual volume capacity is
+                                  equal or lower than the requested capacity. This
+                                  is an alpha field and requires enabling RecoverVolumeExpansionFailure
+                                  feature.
+                                type: object
                               capacity:
                                 additionalProperties:
                                   anyOf:
@@ -8746,6 +9440,14 @@ spec:
                               phase:
                                 description: Phase represents the current phase of
                                   PersistentVolumeClaim.
+                                type: string
+                              resizeStatus:
+                                description: ResizeStatus stores status of resize
+                                  operation. ResizeStatus is not set by default but
+                                  when expansion is complete resizeStatus is set to
+                                  empty string by resize controller or kubelet. This
+                                  is an alpha field and requires enabling RecoverVolumeExpansionFailure
+                                  feature.
                                 type: string
                             type: object
                         type: object
@@ -8909,13 +9611,14 @@ spec:
                           type: string
                         value:
                           description: 'Variable references $(VAR_NAME) are expanded
-                            using the previous defined environment variables in the
-                            container and any service environment variables. If a
-                            variable cannot be resolved, the reference in the input
-                            string will be unchanged. The $(VAR_NAME) syntax can be
-                            escaped with a double $$, ie: $$(VAR_NAME). Escaped references
-                            will never be expanded, regardless of whether the variable
-                            exists or not. Defaults to "".'
+                            using the previously defined environment variables in
+                            the container and any service environment variables. If
+                            a variable cannot be resolved, the reference in the input
+                            string will be unchanged. Double $$ are reduced to a single
+                            $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                            "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                            Escaped references will never be expanded, regardless
+                            of whether the variable exists or not. Defaults to "".'
                           type: string
                       required:
                       - name
@@ -8998,6 +9701,8 @@ spec:
                       type: integer
                     type: array
                   name:
+                    description: Name is deprecated and will be removed at 0.22.0
+                      release
                     type: string
                   nodeSelector:
                     additionalProperties:
@@ -9070,7 +9775,7 @@ spec:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   replicaCount:
-                    description: ReplicaCount is the expected size of the VMSelect
+                    description: ReplicaCount is the expected size of the VMStorage
                       cluster. The controller will eventually make the size of the
                       running cluster equal to the expected size.
                     format: int32
@@ -9102,6 +9807,11 @@ spec:
                           to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                         type: object
                     type: object
+                  rollingUpdateStrategy:
+                    description: RollingUpdateStrategy defines strategy for application
+                      updates Default is OnDelete, in this case operator handles update
+                      process Can be changed for RollingUpdate
+                    type: string
                   runtimeClassName:
                     description: RuntimeClassName - defines runtime class for kubernetes
                       pod. https://kubernetes.io/docs/concepts/containers/runtime-class/
@@ -9276,7 +9986,7 @@ spec:
                       acceptEULA:
                         description: AcceptEULA accepts enterprise feature usage,
                           must be set to true. otherwise backupmanager cannot be added
-                          to single/cluster version. https://victoriametrics.com/assets/VM_EULA.pdf
+                          to single/cluster version. https://victoriametrics.com/legal/eula/
                         type: boolean
                       concurrency:
                         description: Defines number of concurrent workers. Higher
@@ -9310,6 +10020,12 @@ spec:
                       destination:
                         description: Defines destination for backup
                         type: string
+                      destinationDisableSuffixAdd:
+                        description: DestinationDisableSuffixAdd - disables suffix
+                          adding for cluster version backups each vmstorage backup
+                          must have unique backup folder so operator adds POD_NAME
+                          as suffix for backup destination folder.
+                        type: boolean
                       disableDaily:
                         description: Defines if daily backups disabled (default false)
                         type: boolean
@@ -9339,14 +10055,15 @@ spec:
                               type: string
                             value:
                               description: 'Variable references $(VAR_NAME) are expanded
-                                using the previous defined environment variables in
-                                the container and any service environment variables.
+                                using the previously defined environment variables
+                                in the container and any service environment variables.
                                 If a variable cannot be resolved, the reference in
-                                the input string will be unchanged. The $(VAR_NAME)
-                                syntax can be escaped with a double $$, ie: $$(VAR_NAME).
-                                Escaped references will never be expanded, regardless
-                                of whether the variable exists or not. Defaults to
-                                "".'
+                                the input string will be unchanged. Double $$ are
+                                reduced to a single $, which allows for escaping the
+                                $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce
+                                the string literal "$(VAR_NAME)". Escaped references
+                                will never be expanded, regardless of whether the
+                                variable exists or not. Defaults to "".'
                               type: string
                             valueFrom:
                               description: Source for the environment variable's value.
@@ -9743,6 +10460,7 @@ spec:
               bearerTokenSecret:
                 description: Secret to mount to read bearer token for scraping targets.
                   The secret needs to be  accessible by the victoria-metrics operator.
+                nullable: true
                 properties:
                   key:
                     description: The key of the secret to select from.  Must be a
@@ -10528,6 +11246,7 @@ spec:
                       description: Secret to mount to read bearer token for scraping
                         targets. The secret needs to be in the same namespace as the
                         service scrape and accessible by the victoria-metrics operator.
+                      nullable: true
                       properties:
                         key:
                           description: The key of the secret to select from.  Must
@@ -11330,6 +12049,7 @@ spec:
                 description: Secret to mount to read bearer token for scraping targets.
                   The secret needs to be in the same namespace as the service scrape
                   and accessible by the victoria-metrics operator.
+                nullable: true
                 properties:
                   key:
                     description: The key of the secret to select from.  Must be a
@@ -12093,9 +12813,24 @@ spec:
                     concurrency:
                       description: Concurrency defines how many rules execute at once.
                       type: integer
+                    extra_filter_labels:
+                      additionalProperties:
+                        type: string
+                      description: ExtraFilterLabels optional list of label filters
+                        applied to every rule's request withing a group. Is compatible
+                        only with VM datasource. See more details at https://docs.victoriametrics.com#prometheus-querying-api-enhancements
+                      type: object
                     interval:
                       description: evaluation interval for group
                       type: string
+                    labels:
+                      additionalProperties:
+                        type: string
+                      description: Labels optional list of labels added to every rule
+                        within a group. It has priority over the external labels.
+                        Labels are commonly used for adding environment or tenant-specific
+                        tag.
+                      type: object
                     name:
                       description: Name of group
                       type: string
@@ -12134,6 +12869,10 @@ spec:
                             type: string
                         type: object
                       type: array
+                    tenant:
+                      description: Tenant id for group, can be used only with enterprise
+                        version of vmalert See more details at https://docs.victoriametrics.com/vmalert.html#multitenancy
+                      type: string
                   required:
                   - name
                   - rules
@@ -12262,6 +13001,7 @@ spec:
                       description: Secret to mount to read bearer token for scraping
                         targets. The secret needs to be in the same namespace as the
                         service scrape and accessible by the victoria-metrics operator.
+                      nullable: true
                       properties:
                         key:
                           description: The key of the secret to select from.  Must
@@ -13077,12 +13817,14 @@ spec:
                       type: string
                     value:
                       description: 'Variable references $(VAR_NAME) are expanded using
-                        the previous defined environment variables in the container
+                        the previously defined environment variables in the container
                         and any service environment variables. If a variable cannot
                         be resolved, the reference in the input string will be unchanged.
-                        The $(VAR_NAME) syntax can be escaped with a double $$, ie:
-                        $$(VAR_NAME). Escaped references will never be expanded, regardless
-                        of whether the variable exists or not. Defaults to "".'
+                        Double $$ are reduced to a single $, which allows for escaping
+                        the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)" will produce the
+                        string literal "$(VAR_NAME)". Escaped references will never
+                        be expanded, regardless of whether the variable exists or
+                        not. Defaults to "".'
                       type: string
                   required:
                   - name
@@ -13362,13 +14104,48 @@ spec:
                   dataSource:
                     description: 'This field can be used to specify either: * An existing
                       VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)
-                      * An existing PVC (PersistentVolumeClaim) * An existing custom
-                      resource that implements data population (Alpha) In order to
-                      use custom resource types that implement data population, the
-                      AnyVolumeDataSource feature gate must be enabled. If the provisioner
+                      * An existing PVC (PersistentVolumeClaim) If the provisioner
                       or an external controller can support the specified data source,
                       it will create a new volume based on the contents of the specified
-                      data source.'
+                      data source. If the AnyVolumeDataSource feature gate is enabled,
+                      this field will always have the same contents as the DataSourceRef
+                      field.'
+                    properties:
+                      apiGroup:
+                        description: APIGroup is the group for the resource being
+                          referenced. If APIGroup is not specified, the specified
+                          Kind must be in the core API group. For any other third-party
+                          types, APIGroup is required.
+                        type: string
+                      kind:
+                        description: Kind is the type of resource being referenced
+                        type: string
+                      name:
+                        description: Name is the name of resource being referenced
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                  dataSourceRef:
+                    description: 'Specifies the object from which to populate the
+                      volume with data, if a non-empty volume is desired. This may
+                      be any local object from a non-empty API group (non core object)
+                      or a PersistentVolumeClaim object. When this field is specified,
+                      volume binding will only succeed if the type of the specified
+                      object matches some installed volume populator or dynamic provisioner.
+                      This field will replace the functionality of the DataSource
+                      field and as such if both fields are non-empty, they must have
+                      the same value. For backwards compatibility, both fields (DataSource
+                      and DataSourceRef) will be set to the same value automatically
+                      if one of them is empty and the other is non-empty. There are
+                      two important differences between DataSource and DataSourceRef:
+                      * While DataSource only allows two specific types of objects,
+                      DataSourceRef   allows any non-core object, as well as PersistentVolumeClaim
+                      objects. * While DataSource ignores disallowed values (dropping
+                      them), DataSourceRef   preserves all values, and generates an
+                      error if a disallowed value is   specified. (Alpha) Using this
+                      field requires the AnyVolumeDataSource feature gate to be enabled.'
                     properties:
                       apiGroup:
                         description: APIGroup is the group for the resource being
@@ -13388,7 +14165,10 @@ spec:
                     type: object
                   resources:
                     description: 'Resources represents the minimum resources the volume
-                      should have. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources'
+                      should have. If RecoverVolumeExpansionFailure feature is enabled
+                      users are allowed to specify resource requirements that are
+                      lower than previous value but must still be higher than capacity
+                      recorded in the status field of the claim. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources'
                     properties:
                       limits:
                         additionalProperties:
@@ -13537,7 +14317,7 @@ spec:
                   acceptEULA:
                     description: AcceptEULA accepts enterprise feature usage, must
                       be set to true. otherwise backupmanager cannot be added to single/cluster
-                      version. https://victoriametrics.com/assets/VM_EULA.pdf
+                      version. https://victoriametrics.com/legal/eula/
                     type: boolean
                   concurrency:
                     description: Defines number of concurrent workers. Higher concurrency
@@ -13570,6 +14350,12 @@ spec:
                   destination:
                     description: Defines destination for backup
                     type: string
+                  destinationDisableSuffixAdd:
+                    description: DestinationDisableSuffixAdd - disables suffix adding
+                      for cluster version backups each vmstorage backup must have
+                      unique backup folder so operator adds POD_NAME as suffix for
+                      backup destination folder.
+                    type: boolean
                   disableDaily:
                     description: Defines if daily backups disabled (default false)
                     type: boolean
@@ -13598,13 +14384,14 @@ spec:
                           type: string
                         value:
                           description: 'Variable references $(VAR_NAME) are expanded
-                            using the previous defined environment variables in the
-                            container and any service environment variables. If a
-                            variable cannot be resolved, the reference in the input
-                            string will be unchanged. The $(VAR_NAME) syntax can be
-                            escaped with a double $$, ie: $$(VAR_NAME). Escaped references
-                            will never be expanded, regardless of whether the variable
-                            exists or not. Defaults to "".'
+                            using the previously defined environment variables in
+                            the container and any service environment variables. If
+                            a variable cannot be resolved, the reference in the input
+                            string will be unchanged. Double $$ are reduced to a single
+                            $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                            "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                            Escaped references will never be expanded, regardless
+                            of whether the variable exists or not. Defaults to "".'
                           type: string
                         valueFrom:
                           description: Source for the environment variable's value.
@@ -14005,6 +14792,7 @@ spec:
                       description: Secret to mount to read bearer token for scraping
                         targets. The secret needs to be in the same namespace as the
                         service scrape and accessible by the victoria-metrics operator.
+                      nullable: true
                       properties:
                         key:
                           description: The key of the secret to select from.  Must
@@ -14756,6 +15544,14 @@ spec:
                       - name
                       - namespace
                       type: object
+                    headers:
+                      description: 'Headers represent additional http headers, that
+                        vmauth uses in form of ["header_key: header_value"] multiple
+                        values for header key: ["header_key: value1,value2"] it''s
+                        available since 1.68.0 version of vmauth'
+                      items:
+                        type: string
+                      type: array
                     paths:
                       description: Paths - matched path to route.
                       items:
