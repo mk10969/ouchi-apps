@@ -11,10 +11,12 @@ service:
   portName: service
 
 datasources:
+  apiVersion: 1
   datasources.yaml:
     - name: vmsingle
       type: prometheus
       url: http://vmsingle-vmsingle.monitoring.svc:8429
+      access: proxy
       isDefault: true
 
   # - name: CloudWatch
