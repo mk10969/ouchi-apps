@@ -14,8 +14,8 @@ resources:
   - vmagent-single.yaml
 
   # vm cluster
-  # - vmagent.yaml
-  # - vmalert.yaml
-  # - vmalertmanager.yaml
-  # - vmcluster.yaml
+  # - vmcluster/vmagent.yaml
+  # - vmcluster/vmalert.yaml
+  # - vmcluster/vmalertmanager.yaml
+  # - vmcluster/vmcluster.yaml
   # - rules/argocd-scrape.yaml

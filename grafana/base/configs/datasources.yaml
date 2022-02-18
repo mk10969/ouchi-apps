@@ -1,0 +1,27 @@
+service:
+  enabled: true
+  # changed: ClusterIP => LoadBalancer
+  type: LoadBalancer
+  port: 80
+  targetPort:
+    3000
+    # targetPort: 4181 To be used with a proxy extraContainer
+  annotations: {}
+  labels: {}
+  portName: service
+
+datasources:
+  datasources.yaml:
+    - name: vmsingle
+      type: prometheus
+      url: http://vmsingle-vmsingle.monitoring.svc:8429
+      access: proxy
+      isDefault: true
+  # - name: CloudWatch
+  #   type: cloudwatch
+  #   access: proxy
+  #   uid: cloudwatch
+  #   editable: false
+  #   jsonData:
+  #     authType: default
+  #     defaultRegion: us-east-1
