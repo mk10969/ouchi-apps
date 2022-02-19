@@ -124,7 +124,7 @@ metadata:
 type: Opaque
 data:
   admin-user: "YWRtaW4="
-  admin-password: "QktiekxDUFozS2pKWHFTQk5YTzdWMW1UTnh4YzM1T2xNOFdFMnQ4Nw=="
+  admin-password: "TmVyODNMd0hRQ3lnY0NKek1NNDJtVjRHS0wwcko5MlZFelZ6RlBZeA=="
   ldap-toml: ""
 ---
 # Source: grafana/templates/configmap.yaml
@@ -176,13 +176,6 @@ data:
     #!/usr/bin/env sh
     set -euf
     mkdir -p /var/lib/grafana/dashboards/default
-    curl -skf \
-    --connect-timeout 60 \
-    --max-time 60 \
-    -H "Accept: application/json" \
-    -H "Content-Type: application/json;charset=UTF-8" \
-      "https://grafana.com/api/dashboards/1860/revisions/26/download" | sed '/-- .* --/! s/"datasource":.*,/"datasource": "Prometheus",/g'\
-    > "/var/lib/grafana/dashboards/default/prometheus-stats.json"
 ---
 # Source: grafana/templates/dashboards-json-configmap.yaml
 apiVersion: v1
@@ -1481,10 +1474,10 @@ spec:
         app.kubernetes.io/name: grafana
         app.kubernetes.io/instance: grafana
       annotations:
-        checksum/config: 828cb2fc755b981ee6ed052b1accc74c0fe3234f13ffada4bb28c518ec19db29
+        checksum/config: 5412bdcbf34905f742104a49ec6071eb41e2092de2e8e0c6b0ed1fb89f9e3837
         checksum/dashboards-json-config: 4ad794d65df0439e3468430c193c9b79cc3257e98e4ac5523c70e3af87451f70
         checksum/sc-dashboard-provider-config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-        checksum/secret: 7cf758b0946b4356aca87124f32fca1796a276d453854cb8b104ad65f9877f37
+        checksum/secret: bac7994872e7b681b6c5b6120e677cf663cbd0b600eb54ba5f2ce0d69ed02508
     spec:
       
       serviceAccountName: grafana

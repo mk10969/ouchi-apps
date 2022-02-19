@@ -10,6 +10,14 @@ dashboardProviders:
         editable: false
         options:
           path: /var/lib/grafana/dashboards/default
+      # - name: private
+      #   orgId: 1
+      #   folder: private
+      #   type: file
+      #   disableDeletion: true
+      #   editable: false
+      #   options:
+      #     path: /var/lib/grafana/dashboards/private
 
 dashboards:
   default:
@@ -1112,11 +1120,10 @@ dashboards:
           "version": 1,
           "weekStart": ""
         }
-    prometheus-stats:
-      gnetId: 1860
-      revision: 26
-      datasource: Prometheus
-
+    # node-exporter-full:
+    #   gnetId: 1860
+    #   revision: 26
+    #   datasource: Prometheus
     # local-dashboard:
     #   url: https://example.com/repository/test.json
     #   token: ""

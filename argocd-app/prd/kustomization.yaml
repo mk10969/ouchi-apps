@@ -9,7 +9,7 @@ patchesStrategicMerge:
   - metallb.yaml
   - metrics-server.yaml
   - kube-state-metrics.yaml
-  # - grafana.yaml
+  - grafana.yaml
   # - victoriametrics.yaml
 
   # - ingress-controller.yaml
