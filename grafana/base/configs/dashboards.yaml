@@ -1,3 +1,16 @@
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: default
+        orgId: 1
+        folder:
+        type: file
+        disableDeletion: true
+        editable: false
+        options:
+          path: /var/lib/grafana/dashboards/default
+
 dashboards:
   default:
     node-exporter-simple-dashboard:
@@ -27,8 +40,7 @@ dashboards:
           "fiscalYearStartMonth": 0,
           "gnetId": 13978,
           "graphTooltip": 0,
-          "id": 1,
-          "iteration": 1645203429627,
+          "iteration": 1645272524625,
           "links": [],
           "liveNow": false,
           "panels": [
@@ -284,14 +296,16 @@ dashboards:
               "options": {
                 "orientation": "horizontal",
                 "reduceOptions": {
-                  "calcs": ["lastNotNull"],
+                  "calcs": [
+                    "lastNotNull"
+                  ],
                   "fields": "",
                   "values": false
                 },
                 "showThresholdLabels": false,
                 "showThresholdMarkers": true
               },
-              "pluginVersion": "8.3.5",
+              "pluginVersion": "8.3.6",
               "targets": [
                 {
                   "expr": "100 -\n(\n  avg(node_memory_MemAvailable_bytes{job=\"node\", instance=\"$instance\"})\n/\n  avg(node_memory_MemTotal_bytes{job=\"node\", instance=\"$instance\"})\n* 100\n)\n",
@@ -444,11 +458,11 @@ dashboards:
                       },
                       {
                         "color": "rgba(237, 129, 40, 0.89)",
-                        "value": 40
+                        "value": 50
                       },
                       {
                         "color": "rgba(245, 54, 54, 0.9)",
-                        "value": 60
+                        "value": 75
                       }
                     ]
                   },
@@ -468,19 +482,21 @@ dashboards:
               "options": {
                 "orientation": "horizontal",
                 "reduceOptions": {
-                  "calcs": ["lastNotNull"],
+                  "calcs": [
+                    "lastNotNull"
+                  ],
                   "fields": "",
                   "values": false
                 },
                 "showThresholdLabels": false,
                 "showThresholdMarkers": true
               },
-              "pluginVersion": "8.3.5",
+              "pluginVersion": "8.3.6",
               "targets": [
                 {
                   "datasource": {
                     "type": "prometheus",
-                    "uid": "Hb2B4If7z"
+                    "uid": "P2D0F7E0A59E6DFCF"
                   },
                   "exemplar": true,
                   "expr": "(\n  node_thermal_zone_temp{job=\"node\", instance=\"$instance\"}\n)",
@@ -491,13 +507,13 @@ dashboards:
                   "refId": "A"
                 }
               ],
-              "title": "Memory Usage",
+              "title": "CPU Temp",
               "type": "gauge"
             },
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "$datasource"
+                "uid": "${datasource}"
               },
               "fieldConfig": {
                 "defaults": {
@@ -545,7 +561,7 @@ dashboards:
                       },
                       {
                         "color": "red",
-                        "value": 50
+                        "value": 80
                       }
                     ]
                   },
@@ -559,7 +575,7 @@ dashboards:
                 "x": 15,
                 "y": 7
               },
-              "id": 10,
+              "id": 12,
               "links": [],
               "options": {
                 "legend": {
@@ -576,10 +592,10 @@ dashboards:
                 {
                   "datasource": {
                     "type": "prometheus",
-                    "uid": "Hb2B4If7z"
+                    "uid": "${datasource}"
                   },
                   "exemplar": true,
-                  "expr": "(\n  node_thermal_zone_temp{job=\"node\", instance=\"$instance\"}\n)\n",
+                  "expr": "(\n  node_thermal_zone_temp{job=\"node\", instance=\"$instance\"}\n)",
                   "format": "time_series",
                   "interval": "",
                   "intervalFactor": 2,
@@ -1008,7 +1024,7 @@ dashboards:
               "type": "timeseries"
             }
           ],
-          "refresh": "",
+          "refresh": "30s",
           "schemaVersion": 34,
           "style": "dark",
           "tags": [],
@@ -1078,15 +1094,24 @@ dashboards:
               "2h",
               "1d"
             ],
-            "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+            "time_options": [
+              "5m",
+              "15m",
+              "1h",
+              "6h",
+              "12h",
+              "24h",
+              "2d",
+              "7d",
+              "30d"
+            ]
           },
           "timezone": "browser",
           "title": "Node Exporter Simple",
           "uid": "vpUCVSfnk",
-          "version": 3,
+          "version": 1,
           "weekStart": ""
         }
-
     prometheus-stats:
       gnetId: 1860
       revision: 26

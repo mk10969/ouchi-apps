@@ -3,7 +3,7 @@ set shell := ["bash", "-uc"]
 
 
 ##### variables ######
-ouchi_k8s_version               := "v1.2.0"
+ouchi_k8s_version               := "v1.2.1"
 ### apps ###
 argocd_version                  := "v2.2.2"
 argocd_notification_version     := "v1.1.1"
