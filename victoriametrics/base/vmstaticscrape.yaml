@@ -14,3 +14,6 @@ spec:
           "100.64.1.104:9100",
           "100.64.1.151:9100",
         ]
+# https://github.com/VictoriaMetrics/operator/issues/155
+# 設定されているデータを参照する方法。
+# kubectl -n monitoring get secret vmagent-common -o json | jq -r '.data["vmagent.yaml.gz"]' | base64 -d | gunzip
