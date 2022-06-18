@@ -9,7 +9,7 @@ argocd_version                  := "v2.2.2"
 argocd_notification_version     := "v1.1.1"
 cert_manager_version            := "v1.5.3"
 grafana_chart_version           := "6.21.8"
-ingress_controller_version      := "v1.0.0"
+ingress_nginx_chart_version     := "4.1.4"
 kube_state_metrics_version      := "v2.3.0"
 metallb_version                 := "v0.12.1"
 metrics_server_version          := "v0.6.1"
@@ -51,16 +51,24 @@ cert-manager:
 
 # grafana update
 grafana:
+    helm repo add grafana https://grafana.github.io/helm-charts
     helm repo update
-    helm template grafana -n monitoring grafana/grafana --version {{ grafana_chart_version }} \
-        -f ./grafana/base/configs/datasources.yaml -f ./grafana/base/configs/dashboards.yaml > ./grafana/base/upstream/grafana-template.yaml
+    helm template grafana grafana/grafana \
+        --namespace monitoring \
+        --version {{ grafana_chart_version }} \
+        -f ./grafana/base/configs/datasources.yaml \
+        -f ./grafana/base/configs/dashboards.yaml \
+        > ./grafana/base/upstream/grafana-template.yaml
 
-# ingress-controller update
-ingress-controller:
-    curl -sfL -o ./ingress-controller/base/upstream/ingress-controller.yaml \
-        https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ ingress_controller_version }}/deploy/static/provider/cloud/deploy.yaml
-    curl -sfL -o ./ingress-controller/base/upstream/ingress-controller-use-nodeport.yaml \
-        https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ ingress_controller_version }}/deploy/static/provider/baremetal/deploy.yaml
+# ingress-nginx update
+ingress-nginx:
+    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+    helm repo update
+    helm template ingress-nginx ingress-nginx/ingress-nginx \
+        --namespace ingress-nginx \
+        --version {{ ingress_nginx_chart_version }} \
+        > ./ingress-nginx/base/upstream/ingress-nginx-template.yaml
+
 
 # kube-state-metrics update
 kube-state-metrics:

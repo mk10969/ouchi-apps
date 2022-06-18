@@ -7,12 +7,12 @@ patchesStrategicMerge:
   - argocd-app.yaml
   # - argocd-notification.yaml
   - metallb.yaml
+  - ingress-nginx.yaml
+  # - cert-manager.yaml
   - metrics-server.yaml
   - kube-state-metrics.yaml
   - grafana.yaml
   # - victoriametrics.yaml
 
-  # - ingress-controller.yaml
   # - rook-ceph.yaml
   # - rook-tool.yaml
-  # - cert-manager.yaml

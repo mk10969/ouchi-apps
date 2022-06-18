@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx-controller
+  name: ingress-nginx
   namespace: argocd
   annotations:
     argocd.argoproj.io/manifest-generate-paths: ..
@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/mk10969/ouchi-kubernetes
     targetRevision: HEAD
-    path: ingress-controller/base
+    path: ingress-nginx/base
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx

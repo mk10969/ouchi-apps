@@ -1,8 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx-controller
+  name: ingress-nginx
   namespace: argocd
 spec:
   source:
-    path: ingress-controller/prd
+    path: ingress-nginx/prd
