@@ -13,7 +13,7 @@ spec:
   staticScrapeSelector: {}
   replicaCount: 1
   remoteWrite:
-    - url: "http://vmsingle-single:8429/api/v1/write"
+    - url: "http://vmsingle-single.monitoring-system.svc:8429/api/v1/write"
   resources:
     requests:
       cpu: 100m

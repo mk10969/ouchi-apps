@@ -4,7 +4,7 @@ datasources:
     datasources:
       - name: vmsingle
         type: prometheus
-        url: http://vmagent-vmagent-single:8429
+        url: http://vmsingle-single.monitoring-system.svc:8429
         access: proxy
         isDefault: true
 
