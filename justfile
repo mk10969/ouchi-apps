@@ -15,8 +15,8 @@ kube_state_metrics_version      := "v2.3.0"
 metrics_server_version          := "v0.6.1"
 rook_ceph_version               := "v"
 rook_tool_version               := "v"
-vm_operator_version             := "v0.23.2"
-grafana_chart_version           := "6.21.8"
+vm_operator_version             := "v0.29.0"
+grafana_chart_version           := "6.43.5"
 
 
 ##### commands ######
@@ -118,7 +118,7 @@ grafana:
     helm repo add grafana https://grafana.github.io/helm-charts
     helm repo update
     helm template grafana grafana/grafana \
-        --namespace monitoring \
+        --namespace monitoring-system \
         --version {{ grafana_chart_version }} \
         -f ./grafana/base/configs/datasources.yaml \
         -f ./grafana/base/configs/dashboards.yaml \
