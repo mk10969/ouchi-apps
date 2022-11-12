@@ -5,3 +5,4 @@ resources:
   - upstream/crd.yaml
   - upstream/manager.yaml
   - upstream/rbac.yaml
+  - namespace.yaml
