@@ -2,7 +2,7 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMStaticScrape
 metadata:
   name: vmstaticscrape
-  namespace: monitoring
+  namespace: monitoring-system
 spec:
   jobName: node
   targetEndpoints:
