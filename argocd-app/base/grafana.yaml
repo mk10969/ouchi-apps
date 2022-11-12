@@ -14,7 +14,7 @@ spec:
     path: grafana/base
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: monitoring-system
   syncPolicy:
     automated:
       prune: true

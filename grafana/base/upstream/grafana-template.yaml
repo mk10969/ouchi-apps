@@ -27,7 +27,7 @@ metadata:
 type: Opaque
 data:
   admin-user: "YWRtaW4="
-  admin-password: "MDhueEZIaWtoWGJrTW5LZGxOeEhmQnBMcVhMOEhONmROUWhHOVR6RA=="
+  admin-password: "djY4aWRCQmU4WVlhZmpiNE56Z3dWV29MTjVuODd0SmMwUnRWZHNMaw=="
   ldap-toml: ""
 ---
 # Source: grafana/templates/configmap.yaml
@@ -65,7 +65,7 @@ data:
       isDefault: true
       name: vmsingle
       type: prometheus
-      url: http://vmsingle-vmsingle.monitoring.svc:8429
+      url: http://vmagent-vmagent-single:8429
   dashboardproviders.yaml: |
     apiVersion: 1
     providers:
@@ -1318,10 +1318,10 @@ spec:
         app.kubernetes.io/name: grafana
         app.kubernetes.io/instance: grafana
       annotations:
-        checksum/config: d23f32a5139c15d4ef36edd5178848f8f2f7c746eaf7bcc60c54402d5b7f6fc5
+        checksum/config: b5c41801479eed4ec983bd0367085ca37a2beb7cc560453e3af9962460bff4c9
         checksum/dashboards-json-config: cfac943ffbcb8a622c30a9a90639fec638fedb1596560059f217c29fba264e7a
         checksum/sc-dashboard-provider-config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
-        checksum/secret: e493ccc3ed05fe3773c580431f847ab301c2eae8943f677042f295baa67777da
+        checksum/secret: e3237bb4d9d4a185e9218dc6499bebbcb1e410acf9d993a2715b36c25abfee64
     spec:      
       serviceAccountName: grafana
       automountServiceAccountToken: true
