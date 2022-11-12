@@ -6,8 +6,8 @@ resources:
   - vmstaticscrape.yaml
 
   # vm single
-  - vmcluster-single.yaml
   - vmagent-single.yaml
+  - vmsingle-single.yaml
 
   # vm cluster
   # - vmcluster/vmagent.yaml
