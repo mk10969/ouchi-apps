@@ -3,6 +3,9 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - upstream/install.yaml
+  - ingress.yaml
+patches:
+  - patch-argocd-server.yaml
 patchesJson6902:
   - target:
       group: apps

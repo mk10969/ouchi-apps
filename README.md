@@ -12,7 +12,7 @@ The manifests are organized for [Kustomize](https://github.com/kubernetes-sigs/k
 | argocd-notification | ✅      | Notification app to slack                                    |
 | cert-manager        | ✅      | App to add certificates and certificate issuers.             |
 | grafana             | ✅      | Data visualization app. Visualize metrics, logs, and traces. |
-| ingress-controller  | ✅      | A reverse proxy and load balancer.                           |
+| ingress-nginx       | ✅      | A L7 load balancer.                                          |
 | kube-state-metrics  | ✅      | Cluster-level metrics.                                       |
 | metallb             | ✅      | A network load-balancer.                                     |
 | metrics-server      | ✅      | Container resource metrics.                                  |
