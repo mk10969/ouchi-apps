@@ -10,7 +10,7 @@ resources:
   - metrics-server.yaml
   - kube-state-metrics.yaml
   - grafana.yaml
-  # - victoriametrics.yaml
+  - victoriametrics.yaml
 
   # - rook-ceph.yaml
   # - rook-tool.yaml
