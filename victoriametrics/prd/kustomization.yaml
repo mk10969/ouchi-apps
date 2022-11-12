@@ -2,3 +2,16 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../base
+  # node exporter scraping
+  - vmstaticscrape.yaml
+
+  # vm single
+  - vmcluster-single.yaml
+  - vmagent-single.yaml
+
+  # vm cluster
+  # - vmcluster/vmagent.yaml
+  # - vmcluster/vmalert.yaml
+  # - vmcluster/vmalertmanager.yaml
+  # - vmcluster/vmcluster.yaml
+  # - rules/argocd-scrape.yaml
